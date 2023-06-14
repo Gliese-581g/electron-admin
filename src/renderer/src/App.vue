@@ -7,7 +7,7 @@
 <script setup lang="ts"></script>
 
 <style lang="scss">
-body {
+#app {
   -webkit-app-region: drag;
 }
 </style>

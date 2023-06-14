@@ -26,7 +26,9 @@ export default defineConfig({
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src'),
+        '@components': resolve('src/renderer/src/components'),
         '@views': resolve('src/renderer/src/views'),
+        '@layout': resolve('src/renderer/src/layout'),
         '@store': resolve('src/renderer/src/store'),
         '@utils': resolve('src/renderer/src/utils'),
         '@types': resolve('src/renderer/src/types'),
