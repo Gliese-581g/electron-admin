@@ -7,7 +7,11 @@
       <el-button circle>
         <el-icon><i-ep-moon /></el-icon>
       </el-button>
+      <el-button circle @click="visible = true">
+        <el-icon><i-ep-close /></el-icon>
+      </el-button>
     </el-row>
+    <CloseDialog :visible="visible" @update:visible="(newValue) => (visible = newValue)" />
     <div class="left-banner"></div>
     <div class="login-box">
       <h1 class="title">登录</h1>
@@ -22,8 +26,10 @@
 </template>
 <script setup lang="ts">
 import PasswordForm from './PasswordForm.vue'
+import CloseDialog from '@components/CloseDialog.vue'
 import { ref } from 'vue'
 const activeName = ref<'user' | 'phone'>('user')
+const visible = ref(false)
 </script>
 <style lang="scss" scoped>
 .flex-box {
