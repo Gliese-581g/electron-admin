@@ -1,9 +1,9 @@
 <template>
-  <el-dialog v-model="dialogVisible" width="30%">
+  <el-dialog v-model="visible" width="30%" class="dialog-box">
     <span>您确定退出此程序？</span>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="visible = false">取消</el-button>
         <el-button type="primary" @click="closeApp"> 确定 </el-button>
       </span>
     </template>
@@ -14,16 +14,16 @@
 import { computed } from 'vue'
 
 const props = defineProps<{
-  visible: boolean
+  dialogVisible: boolean
 }>()
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:dialogVisible'])
 
-const dialogVisible = computed({
+const visible = computed({
   get() {
-    return props.visible
+    return props.dialogVisible
   },
   set(value) {
-    emit('update:visible', value)
+    emit('update:dialogVisible', value)
   }
 })
 function closeApp() {
@@ -31,4 +31,8 @@ function closeApp() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.dialog-box * {
+  -webkit-app-region: no-drag;
+}
+</style>

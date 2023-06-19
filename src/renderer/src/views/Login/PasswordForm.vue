@@ -4,7 +4,7 @@
     <el-form-item prop="username">
       <el-input v-model="ruleForm.username" clearable @input="errorMsg = ''">
         <template #prefix>
-          <el-icon><i-ep-user /></el-icon>
+          <el-icon><User /></el-icon>
         </template>
       </el-input>
     </el-form-item>
@@ -18,7 +18,7 @@
         @input="errorMsg = ''"
       >
         <template #prefix>
-          <el-icon><i-ep-lock /></el-icon>
+          <el-icon><Lock /></el-icon>
         </template>
       </el-input>
     </el-form-item>
@@ -27,7 +27,7 @@
       <div class="captcha">
         <el-input v-model="ruleForm.captcha" @input="errorMsg = ''">
           <template #prefix>
-            <el-icon><i-ep-circle-check /></el-icon>
+            <el-icon><CircleCheck /></el-icon>
           </template>
         </el-input>
         <el-image :src="imgUrl" class="captcha-img" @click="getCaptchaImage" />
@@ -70,7 +70,7 @@ const rules = reactive({
 })
 
 // 获取验证码图片
-const imgUrl = ref<FileReader['result']>('')
+const imgUrl = ref('')
 const key = nanoid() // 随机UUID
 
 async function getCaptchaImage(): Promise<void> {
@@ -105,7 +105,7 @@ function login() {
         setMemoPassword(ruleForm.username, ruleForm.password)
 
         //登录后跳转
-
+        ElMessage.success('登录成功')
         router.push('/')
       }
       if (code === '10002') errorMsg.value = msg

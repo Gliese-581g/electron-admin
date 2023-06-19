@@ -16,7 +16,7 @@ export function abToDataUrl(
   })
 }
 //arrayBuffer转base64的data:url
-export function abToDataUrl2(arrayBuffer: ArrayBuffer, mimeType: string) {
+export function abToDataUrl2(arrayBuffer: ArrayBuffer, mimeType: string): string {
   return (
     `data:${mimeType};base64,` +
     //将ArrayBuffer转换为base64-编码的字符串
