@@ -1,20 +1,20 @@
 <template>
-  <div class="layout">
-    <SideBar class="side-bar" />
-    <!-- <MenuBar class="menu-bar" /> -->
-    <div class="right-bar">
-      <NavigationBar class="navigation-bar" />
-      <TagView class="tag-view" />
-      <DashBoard class="dashboard" />
-    </div>
-  </div>
+  <el-container>
+    <el-aside>
+      <SideBar class="side-bar" />
+    </el-aside>
+    <el-container>
+      <el-header><NavigationBar class="navigation-bar" /></el-header>
+      <el-main><DashBoard class="dashboard" /></el-main>
+    </el-container>
+  </el-container>
 </template>
 
 <script setup lang="ts">
 import SideBar from './components/SideBar/SideBar.vue'
 // import MenuBar from './components/MenuBar/MenuBar.vue'
 import NavigationBar from './components/NavigationBar/NavigationBar.vue'
-import TagView from './components/TagView/TagView.vue'
+// import TagView from './components/TagView/TagView.vue'
 import DashBoard from './components/DashBoard/DashBoard.vue'
 
 import { useUserStore } from '@store/user'
@@ -27,38 +27,4 @@ onBeforeMount(async () => {
 })
 </script>
 
-<style lang="scss" scoped>
-.layout {
-  // position: relative;
-  display: flex;
-  height: 100vh;
-}
-.side-bar {
-  width: 250px;
-  color: #fff;
-}
-.menu-bar {
-  width: 200px;
-}
-.right-bar {
-  flex: 1;
-  // position: relative;
-  .navigation-bar {
-    // position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50px;
-    background-color: antiquewhite;
-  }
-  .tag-view {
-    width: 100%;
-    height: 50px;
-    background-color: aquamarine;
-  }
-  .dashboard {
-    width: 100%;
-    background-color: #f0f2f5;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

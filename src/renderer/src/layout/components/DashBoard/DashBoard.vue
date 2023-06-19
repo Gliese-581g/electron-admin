@@ -1,6 +1,8 @@
 <template>
   <div>
-    <router-view></router-view>
+    <el-scrollbar view-style="padding: 30px;">
+      <router-view></router-view>
+    </el-scrollbar>
   </div>
 </template>
 
