@@ -1,13 +1,18 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
-    "src/renderer/src/env.d.ts",
+    // "src/renderer/src/env.d.ts",
+
+    "src/renderer/auto-imports.d.ts",
+    "src/renderer/components.d.ts",
+    "src/renderer/src/*",
     "src/renderer/src/**/*",
     "src/renderer/src/**/*.vue",
     "src/preload/*.d.ts"
   ],
   "compilerOptions": {
     "composite": true,
+    "types": ["element-plus/global"],
     "baseUrl": ".",
     "paths": {
       "@renderer/*": [
@@ -28,9 +33,6 @@
       "@utils/*": [
         "src/renderer/src/utils/*"
       ],
-      "@types/*": [
-        "src/renderer/src/types/*"
-      ],
       "@api/*": [
         "src/renderer/src/api/*"
       ],
@@ -38,5 +40,6 @@
         "src/renderer/src/config/*"
       ]
     }
+
   }
 }

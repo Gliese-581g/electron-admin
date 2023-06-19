@@ -465,10 +465,38 @@
   resolved "https://registry.npmmirror.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@iconify-json/ep@^1.1.10":
-  version "1.1.10"
-  resolved "https://registry.npmjs.org/@iconify-json/ep/-/ep-1.1.10.tgz#2e390de8bc209b91f0fc217642ad7cd3e24e2d0f"
-  integrity sha512-1N3H28hbulsw3UNZjAZ1c7BhK9mLiw8VrngQc58xNQ7dnzaUgtKN81aqkrZ9ffDXcfJGL3Rk9Yc3/QrSSI24sg==
+"@iconify-json/carbon@^1.1.18":
+  version "1.1.18"
+  resolved "https://registry.npmmirror.com/@iconify-json/carbon/-/carbon-1.1.18.tgz#b371d73c5d9b05f1cbbfc86d93b1d877fb11c8c5"
+  integrity sha512-RbKET6KS9xUMeYVq1FUH3UUA7AYNcnApkHt2AccCwTWTQQs/O58ji4Of6z6PhRajGlbfvrJzT/Uqh19OKECRvA==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify-json/icon-park-outline@^1.1.11":
+  version "1.1.11"
+  resolved "https://registry.npmjs.org/@iconify-json/icon-park-outline/-/icon-park-outline-1.1.11.tgz#f3418f8abba7f86436ac07c8b5c7809260adc526"
+  integrity sha512-hfevr1UUsw3d0STNgD6b0wUex6N99tE7URxN9bBbi+HJBzGOcN4gQt6GTKuapliAWoyZbnAqUtRdhIvgZ7epUA==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify-json/icon-park-solid@^1.1.9":
+  version "1.1.9"
+  resolved "https://registry.npmjs.org/@iconify-json/icon-park-solid/-/icon-park-solid-1.1.9.tgz#75c9a83eae9e5660698998d8d86fdfcba733b578"
+  integrity sha512-zYjkJqTKg4xSh7TlBeyH0Q0wfNuI+utErT2wA5grMsFkm6adISIB8QJ68H0whqhUtRH6s1BBPt/thXwLxwPIEw==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify-json/icon-park@^1.1.11":
+  version "1.1.11"
+  resolved "https://registry.npmjs.org/@iconify-json/icon-park/-/icon-park-1.1.11.tgz#21318ad615cfe312a950d33ffa2ff0dc72ef1fd3"
+  integrity sha512-0nGdc20E1+iXu2E71mXCBGYFuuwmPrYs27x5Y7btmK+8281Y5HAZZQcCNzR1BwYMWKzTetXFG3DQwxMELite7Q==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify-json/ph@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.npmjs.org/@iconify-json/ph/-/ph-1.1.5.tgz#157a7559945c2c86bab0821091ef5181c7b9929e"
+  integrity sha512-iLXq3nohfGge22gL2tZmQ2WHBKkKkIbGWrkuyC8arckS4PWaONyh4A+uDPtSek9QbYDvi9AE2+NxWkNZhANotA==
   dependencies:
     "@iconify/types" "*"
 
