@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="dialogFormVisible" :title="roleItem ? '修改角色' : '增加角色'">
-    <el-form ref="ruleFormRef" :model="form" :rules="rulesStore.rules">
+    <el-form ref="ruleFormRef" :model="form" :rules="rulesStore.rules" label-width="80px">
       <el-form-item label="角色名称" prop="roleName">
         <el-input v-model="form.roleName" autocomplete="off" />
       </el-form-item>

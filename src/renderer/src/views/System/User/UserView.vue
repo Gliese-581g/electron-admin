@@ -4,61 +4,106 @@
       <span class="table-title">用户列表</span>
       <div class="table-edit">
         <el-button type="primary" :icon="Plus" @click="addRole">新增用户</el-button>
+        <el-button type="danger" :icon="Delete" @click="addRole">删除</el-button>
       </div>
     </div>
-    <EditDialog v-model:dialogVisible="dialogVisible" />
-    <el-table :data="userList" style="width: 100%" border>
-      <el-table-column type="selection" align="center" fixed width="100" />
-      <el-table-column label="用户名称" prop="username" align="center" width="150" />
-      <el-table-column label="真实姓名" prop="realName" align="center" width="150" />
-      <el-table-column label="用户类型" prop="userType" align="center" width="150" />
+    <AddUser :id="userId" v-model:dialogVisible="dialogVisible" @get-user-list="getUserList" />
+    <el-table v-if="userList.length" :data="userList" style="width: 100%" border>
+      <el-table-column type="selection" align="center" fixed min-width="70" />
+      <el-table-column label="用户名称" prop="username" align="center" min-width="150" />
+      <el-table-column label="真实姓名" prop="realName" align="center" min-width="150" />
+      <el-table-column label="用户类型" prop="userType" align="center" min-width="120">
+        <template #default="scope"> {{ calcUserType(scope.row.userType) }} </template>
+      </el-table-column>
       <el-table-column label="手机号码" prop="phone" align="center" width="150" />
-      <el-table-column label="用户性别" align="center" width="150">
+      <el-table-column label="用户性别" align="center" min-width="100">
         <template #default="scope"> {{ calcGender(scope.row.gender) }} </template>
       </el-table-column>
-      <el-table-column label="账号状态" align="center" width="150">
+      <el-table-column label="账号状态" align="center" min-width="100">
         <template #default="scope">
           <el-tag v-if="scope.row.enabled">启用</el-tag>
           <el-tag v-else>禁用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column width="150" label="操作" fixed="right">
-        <!-- <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
-        </template> -->
+      <el-table-column min-width="200" label="操作" align="center" fixed="right">
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
-          <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)"
-            >Delete</el-button
+          <el-button size="small" type="success" @click="handleEdit(scope.row.id)">修改</el-button>
+          <el-popconfirm title="确定删除?" @confirm="handleDelete(scope.row.id)">
+            <template #reference>
+              <el-button size="small" type="danger">删除</el-button>
+            </template>
+          </el-popconfirm>
+          <el-button size="small" type="primary" text @click="handleDelete(scope.row.id)"
+            >更多</el-button
           >
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      v-model:current-page="page.currentPage"
+      v-model:page-size="page.pageSize"
+      :page-sizes="[6, 8, 10]"
+      layout="->,total, sizes, prev, pager, next, jumper"
+      :total="pageTotal"
+      style="margin-top: 20px"
+      @size-change="handlePageChange"
+      @current-change="handlePageChange"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, reactive, ref } from 'vue'
 import { userUserListStore } from '@store/use-list'
 import { storeToRefs } from 'pinia'
-import { Plus } from '@element-plus/icons-vue'
-import EditDialog from './EditDialog.vue'
+import { Plus, Delete } from '@element-plus/icons-vue'
+import AddUser from './AddUser.vue'
+import { reqDeleteUser } from '@api/user'
 const userListStore = userUserListStore()
-const { userList } = storeToRefs(userListStore)
+const { userList, pageTotal } = storeToRefs(userListStore)
 const dialogVisible = ref(false)
-onBeforeMount(() => {
-  userListStore.getUserList({
-    current: '1',
-    size: '8'
-  })
-})
 
+const page = reactive({
+  currentPage: 1,
+  pageSize: 8
+})
+const getUserList = () => {
+  userListStore.getUserList({
+    current: page.currentPage,
+    size: page.pageSize
+  })
+}
+onBeforeMount(() => {
+  getUserList()
+})
+const handlePageChange = () => {
+  getUserList()
+}
+const userId = ref('')
 function addRole() {
+  userId.value = ''
   dialogVisible.value = true
 }
 // （1：男；2：女；0：未知）
 function calcGender(gender: number) {
-  return gender ? '未知' : gender === 1 ? '男' : '女'
+  return gender ? (gender === 1 ? '男' : '女') : '未知'
+}
+
+//  "userType": 1,//用户类型（0：普通账号；1：超级管理员）
+function calcUserType(userType: number) {
+  return userType ? '超级管理员' : '普通账号'
+}
+
+const handleEdit = (id) => {
+  userId.value = id
+  dialogVisible.value = true
+}
+const handleDelete = async (id) => {
+  const { code, msg } = await reqDeleteUser(id)
+  if (code === '200') {
+    ElMessage.success('用户删除成功')
+    getUserList()
+  } else ElMessage.error(`用户删除失败，失败原因：${msg}`)
 }
 </script>
 

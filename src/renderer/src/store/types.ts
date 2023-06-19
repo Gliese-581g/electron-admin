@@ -28,3 +28,22 @@ export interface IRole {
   updateBy: string | null
   updateTime: number | null
 }
+export interface IUser {
+  id: string
+  username: string //用户名
+  realName: string //真实姓名
+  userType: 0 | 1 //用户类型（0：普通账号；1：超级管理员）
+  email: string //用户邮箱
+  phone: string //手机号码
+  gender: 0 | 1 | 2 //用户性别（1：男；2：女；0：未知）
+  avatar: string //头像路径
+  enabled: 0 | 1 //帐号状态（0：禁用；1：正常）
+  delFlag: 0 | 1 //是否删除（0：有效；1：删除）
+  loginIp: string //最后登陆IP
+  loginDate: number //最后登陆时间
+  createBy: null
+  createTime: number
+  updateBy: string
+  updateTime: number
+  remark: string //备注
+}

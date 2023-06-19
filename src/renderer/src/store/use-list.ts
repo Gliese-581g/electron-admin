@@ -1,19 +1,33 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { reqGetUserList, reqGetPageList, reqGetUnitList } from '@api/user'
-
+import { reqGetUserList, reqGetAllPost, reqGetUnitList, reqGetAllRole } from '@api/user'
+import { IUser } from './types'
 export const userUserListStore = defineStore('user-list', () => {
-  const userList = ref([])
-  const pageList = ref<
+  // 用户列表
+  const userList = ref<IUser[]>([])
+  const pageTotal = ref(0)
+
+  // 全部岗位列表
+  const postList = ref<
     {
-      id: string
       postName: string
+      id: string
     }[]
   >([])
+
+  // 机构列表
   const unitList = ref<
     {
-      id: string
       name: string
+      id: string
+    }[]
+  >([])
+
+  // 全部角色列表
+  const roleList = ref<
+    {
+      roleName: string
+      id: string
     }[]
   >([])
 
@@ -21,12 +35,13 @@ export const userUserListStore = defineStore('user-list', () => {
     const { code, msg, data } = await reqGetUserList(params)
     if (code === '200') {
       userList.value = data.records
+      pageTotal.value = data.total
     } else console.log(msg)
   }
-  async function getPageList(params) {
-    const { code, msg, data } = await reqGetPageList(params)
+  async function getAllPost() {
+    const { code, msg, data } = await reqGetAllPost()
     if (code === '200') {
-      pageList.value = data.records
+      postList.value = data
     } else console.log(msg)
   }
   async function getUnitList() {
@@ -35,5 +50,21 @@ export const userUserListStore = defineStore('user-list', () => {
       unitList.value = data
     } else console.log(msg)
   }
-  return { userList, pageList, unitList, getUserList, getPageList, getUnitList }
+  async function getAllRole() {
+    const { code, msg, data } = await reqGetAllRole()
+    if (code === '200') {
+      roleList.value = data
+    } else console.log(msg)
+  }
+  return {
+    userList,
+    pageTotal,
+    postList,
+    unitList,
+    roleList,
+    getUserList,
+    getAllPost,
+    getUnitList,
+    getAllRole
+  }
 })
