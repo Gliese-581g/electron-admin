@@ -15,3 +15,16 @@ export interface routeType {
   }
   children?: routeType[]
 }
+export interface IRole {
+  createBy: string
+  createTime: number
+  dataPrivileges: number
+  descript: string
+  enabled: 1 | 0
+  id: string
+  roleName: string
+  rolePerm: string
+  unitId: string
+  updateBy: string | null
+  updateTime: number | null
+}

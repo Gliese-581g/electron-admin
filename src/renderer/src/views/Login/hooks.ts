@@ -6,7 +6,6 @@ export function useMemoPassword() {
 
   const checkedMemo = ref(checked)
   function handlerMemoChange(newVal) {
-    console.log(newVal)
     localStorage.setItem('memoPassword', newVal.toString())
   }
 
