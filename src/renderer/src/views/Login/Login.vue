@@ -21,7 +21,9 @@
           <el-tab-pane label="账号登录" name="user">
             <PasswordForm />
           </el-tab-pane>
-          <el-tab-pane label="手机号登录" name="phone">phone</el-tab-pane>
+          <el-tab-pane label="手机号登录" name="phone">
+            <PhoneForm />
+          </el-tab-pane>
         </el-tabs>
       </div>
     </div>
@@ -29,6 +31,7 @@
 </template>
 <script setup lang="ts">
 import PasswordForm from './PasswordForm.vue'
+import PhoneForm from './PhoneForm.vue'
 import CloseDialog from '@components/CloseDialog.vue'
 import { ref } from 'vue'
 const activeName = ref<'user' | 'phone'>('user')

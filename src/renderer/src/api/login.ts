@@ -29,3 +29,17 @@ export function reqGetRouters(rolePerm): Promise<IDefaultResponse> {
     method: 'get'
   })
 }
+export function reqGetCaptcha(params): Promise<IDefaultResponse> {
+  return request({
+    url: '/captcha/sendRegisterOrLoginCaptcha',
+    method: 'get',
+    params
+  })
+}
+export function loginByMobile(data): Promise<IDefaultResponse> {
+  return request({
+    url: '/u/loginByMobile',
+    method: 'post',
+    data
+  })
+}
