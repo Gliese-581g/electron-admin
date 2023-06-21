@@ -4,7 +4,7 @@
       <SideBar class="side-bar" />
     </el-aside>
     <el-container>
-      <el-header><TopBar class="top-bar" /></el-header>
+      <el-header height="90px"><TopBar class="top-bar" /></el-header>
       <el-scrollbar wrap-style="background-color: #f0f2f5">
         <el-main>
           <DashBoard class="dashboard" />
