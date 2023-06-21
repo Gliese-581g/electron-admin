@@ -23,37 +23,45 @@
 </template>
 
 <script setup lang="ts">
-import { useRouteStore } from '@store/routes'
+import { useRoutesStore } from '@store/routes'
 import { routeType } from '@store/types'
 import { storeToRefs } from 'pinia'
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import SecondMenu from './SecondMenu.vue'
+import { useRoute } from 'vue-router'
 
-const routeStore = useRouteStore()
-const { routes } = storeToRefs(routeStore)
+const routesStore = useRoutesStore()
+const { routes } = storeToRefs(routesStore)
 function formatIconName(route) {
   return route.meta.icon.replace(/^el-icon-/, '')
 }
-const activeIdx = ref('1')
+const routesMap = useRoute()
+console.log(routesMap)
+const activeIdx = ref(routesMap.meta.pid)
+
+const initialRoute = computed(() => {
+  const initial = routes.value.find((route) => route.id === routesMap.meta.pid)
+  return {
+    initId: routesMap.meta.id || '',
+    name: initial?.name || '',
+    children: initial?.children || []
+  }
+})
+
 const activeRoute = reactive<{
+  initId: string | object
   name: string
   children: routeType[]
 }>({
-  name: '',
-  children: []
+  initId: initialRoute.value.initId,
+  name: initialRoute.value.name,
+  children: initialRoute.value.children
 })
 function handleActive(route) {
   activeIdx.value = route.id
   activeRoute.name = route.name
   activeRoute.children = route.children || []
 }
-watch(routes, () => {
-  if (routes.value.length > 0) {
-    const route = routes.value[0]
-    activeRoute.name = route.name
-    activeRoute.children = route.children || []
-  }
-})
 </script>
 
 <style lang="scss" scoped>

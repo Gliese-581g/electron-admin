@@ -17,7 +17,6 @@
     </ul>
   </div>
 </template>
-d
 <script setup lang="ts">
 import { routeType } from '@store/types'
 import { ref } from 'vue'
@@ -25,8 +24,9 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const myRouter = useRouter()
 
-defineProps<{
+const props = defineProps<{
   route: {
+    initId: string | object
     name: string
     children: routeType[]
   }
@@ -34,8 +34,8 @@ defineProps<{
 function formatIconName(route) {
   return route.meta.icon.replace(/^el-icon-/, '')
 }
-
-const activeIdx = ref('2')
+console.log(props.route.initId)
+const activeIdx = ref(props.route.initId)
 function handleActive(route) {
   activeIdx.value = route.id
   myRouter.push(route.path)

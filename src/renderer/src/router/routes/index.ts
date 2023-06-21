@@ -1,26 +1,17 @@
 import Layout from '@layout/Layout.vue'
-import HomeView from '@views/Home/Home.vue'
+import home from '@views/home/home.vue'
 import Login from '@views/Login/Login.vue'
 const routes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/system/user',
+    name: 'layout',
+    redirect: '/home',
     children: [
       {
         path: 'home',
-        name: 'Home',
-        component: HomeView
-      },
-      {
-        path: 'system/role',
-        name: 'role',
-        component: () => import('@views/System/Role/RoleView.vue')
-      },
-      {
-        path: 'system/user',
-        name: 'user',
-        component: () => import('@views/System/User/UserView.vue')
+        name: 'home',
+        component: home
       }
     ]
   },

@@ -52,6 +52,8 @@ import { Encrypt } from '@utils/aes'
 import { useRouter } from 'vue-router'
 import { abToDataUrl2 } from '@utils/index'
 import { useMemoPassword } from './hooks'
+import { useUserStore } from '@store/user'
+const userStore = useUserStore()
 const router = useRouter()
 
 const { checkedMemo, handlerMemoChange, memoData, setMemoPassword } = useMemoPassword()
@@ -103,6 +105,7 @@ function login() {
         sessionStorage.setItem('TOKEN', data)
         // 记住密码功能
         setMemoPassword(ruleForm.username, ruleForm.password)
+        await userStore.geUserInfo()
 
         //登录后跳转
         ElMessage.success('登录成功')
