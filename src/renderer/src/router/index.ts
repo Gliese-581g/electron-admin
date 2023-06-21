@@ -8,7 +8,6 @@ const router = createRouter({
 })
 let load = 0
 router.beforeEach(async (to, from) => {
-  console.log('hello')
   const accessToken = sessionStorage.getItem('TOKEN')
   // 只要没登录，都跳转到登录页，如果是导航到登录页就直接放行而不跳转
   // 每次return加参数跳转都会开启一个路由守卫的生命周期钩子

@@ -69,7 +69,6 @@ const rules = reactive({
 const countDown = ref(0)
 const formRef = ref()
 const getLoginCaptcha = () => {
-  console.log(formRef.value)
   formRef.value.validateField(['phone'], async (valid) => {
     if (valid) {
       const { code, msg } = await reqGetCaptcha({ mobile: Encrypt(form.phone) })
@@ -77,7 +76,6 @@ const getLoginCaptcha = () => {
         ElMessage.success('发送验证码成功')
         countDown.value = 60
         const timer = setInterval(() => {
-          console.log(countDown.value)
           if (countDown.value) --countDown.value
           else clearInterval(timer)
         }, 1000)
@@ -86,25 +84,23 @@ const getLoginCaptcha = () => {
   })
 }
 const login = () => {
-  console.log(
-    formRef.value.validate(async (valid) => {
-      if (valid) {
-        const { code, msg, data } = await loginByMobile({
-          mobile: Encrypt(form.phone),
-          captcha: Encrypt(form.captcha)
-        })
-        if (code === '200') {
-          // 保存token
+  formRef.value.validate(async (valid) => {
+    if (valid) {
+      const { code, msg, data } = await loginByMobile({
+        mobile: Encrypt(form.phone),
+        captcha: Encrypt(form.captcha)
+      })
+      if (code === '200') {
+        // 保存token
 
-          sessionStorage.setItem('TOKEN', data)
+        sessionStorage.setItem('TOKEN', data)
 
-          //登录后跳转
-          ElMessage.success('登录成功')
-          router.push('/')
-        } else ElMessage.error(msg)
-      }
-    })
-  )
+        //登录后跳转
+        ElMessage.success('登录成功')
+        router.push('/')
+      } else ElMessage.error(msg)
+    }
+  })
 }
 </script>
 

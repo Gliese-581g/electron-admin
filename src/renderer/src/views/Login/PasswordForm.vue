@@ -25,7 +25,7 @@
     <!-- 验证码 -->
     <el-form-item prop="captcha">
       <div class="captcha">
-        <el-input v-model="ruleForm.captcha" @input="errorMsg = ''">
+        <el-input v-model="ruleForm.captcha" clearable @input="errorMsg = ''">
           <template #prefix>
             <el-icon><CircleCheck /></el-icon>
           </template>

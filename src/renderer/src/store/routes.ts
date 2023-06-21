@@ -15,7 +15,6 @@ export const useRoutesStore = defineStore('routes', () => {
     if (code === '200') {
       routes.value = data
       routesMap.value = generateRoute(routes.value)
-      console.log(routesMap)
     } else console.log(msg)
   }
   return { routes, getRoutes, routesMap }

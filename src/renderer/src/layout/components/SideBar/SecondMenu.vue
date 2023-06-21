@@ -34,10 +34,10 @@ const props = defineProps<{
 function formatIconName(route) {
   return route.meta.icon.replace(/^el-icon-/, '')
 }
-console.log(props.route.initId)
 const activeIdx = ref(props.route.initId)
 function handleActive(route) {
   activeIdx.value = route.id
+
   myRouter.push(route.path)
 }
 </script>

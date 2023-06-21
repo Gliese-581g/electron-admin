@@ -66,7 +66,6 @@ async function addRole() {
     if (valid) {
       // 将选择的permissionId带上
       form.permissionIds = permissionTreeRef.value.getCheckedKeys()
-      console.log(form)
       const { code } = form.id ? await reqUpdateRole(form) : await reqAddRole(form)
       if (code === '200') {
         ElMessage({

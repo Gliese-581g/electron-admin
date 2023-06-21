@@ -6,7 +6,6 @@ export const useRulesStore = (id) => {
 
   const validateName = (_rule: any, value: any, callback: any) => {
     const repeatTimes = userListStore.userList.filter((item) => item.username === value).length
-    console.log(repeatTimes, id)
     const isRepeat =
       (repeatTimes >= 2 && id.value) || (repeatTimes >= 1 && !id.value) ? true : false
     if (isRepeat) {

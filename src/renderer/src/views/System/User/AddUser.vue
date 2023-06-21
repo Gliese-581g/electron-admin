@@ -146,7 +146,6 @@ async function getUserData(id) {
     form.roleIds = data.roleIds
     form.postIds = data.postIds
     for (let key in form) {
-      console.log(key)
       if (data.user[key] !== undefined) form[key] = data.user[key]
     }
   } else console.log(msg)

@@ -1,7 +1,7 @@
 <template>
-  <div>tag-view</div>
+  <div></div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup></script>
 
 <style lang="scss" scoped></style>

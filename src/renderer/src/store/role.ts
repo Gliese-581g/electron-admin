@@ -9,7 +9,6 @@ export const useRoleStore = defineStore('role', () => {
     const { code, msg, data } = await reqGetRoleList(params)
     if (code === '200') {
       roleList.value = data.records
-      console.log(data)
     } else console.log(msg)
   }
 

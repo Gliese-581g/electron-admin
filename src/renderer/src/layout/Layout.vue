@@ -1,20 +1,22 @@
 <template>
-  <el-container>
+  <el-container style="height: 100vh">
     <el-aside>
       <SideBar class="side-bar" />
     </el-aside>
     <el-container>
-      <el-header><NavigationBar class="navigation-bar" /></el-header>
-      <el-main><DashBoard class="dashboard" /></el-main>
+      <el-header><TopBar class="top-bar" /></el-header>
+      <el-scrollbar wrap-style="background-color: #f0f2f5">
+        <el-main>
+          <DashBoard class="dashboard" />
+        </el-main>
+      </el-scrollbar>
     </el-container>
   </el-container>
 </template>
 
 <script setup lang="ts">
 import SideBar from './components/SideBar/SideBar.vue'
-// import MenuBar from './components/MenuBar/MenuBar.vue'
-import NavigationBar from './components/NavigationBar/NavigationBar.vue'
-// import TagView from './components/TagView/TagView.vue'
+import TopBar from './components/TopBar/TopBar.vue'
 import DashBoard from './components/DashBoard/DashBoard.vue'
 
 import { useUserStore } from '@store/user'
