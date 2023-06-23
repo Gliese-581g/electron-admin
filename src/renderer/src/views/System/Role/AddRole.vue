@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogFormVisible" :title="roleItem ? '修改角色' : '增加角色'">
+  <el-dialog v-model="dialogFormVisible" :title="id ? '修改角色' : '增加角色'">
     <el-form ref="ruleFormRef" :model="form" :rules="rulesStore.rules" label-width="80px">
       <el-form-item label="角色名称" prop="roleName">
         <el-input v-model="form.roleName" autocomplete="off" />
@@ -30,13 +30,15 @@
 
 <script setup lang="ts">
 import { computed, ref, reactive, watch, nextTick, toRef } from 'vue'
-import { reqAddRole, reqUpdateRole } from '@api/role'
+import { reqAddRole, reqUpdateRole, getRoleById } from '@api/role'
+import { IRole } from '@renderer/typings/global'
+
 import { useRulesStore } from './validate'
 import PermissionTree from './PermissionTree.vue'
-import { addRoleParams } from '@api/types'
 
 const props = defineProps<{
-  roleItem: addRoleParams | null
+  id: string
+  roleList: IRole[]
   dialogVisible: boolean
 }>()
 const emit = defineEmits(['update:dialogVisible'])
@@ -57,8 +59,7 @@ const form = reactive({
   descript: '',
   permissionIds: []
 })
-const rulesStore = useRulesStore(toRef(form, 'id'))
-
+const rulesStore = useRulesStore(toRef(form, 'id'), toRef(props, 'roleList'))
 const ruleFormRef = ref()
 const permissionTreeRef = ref()
 async function addRole() {
@@ -66,7 +67,6 @@ async function addRole() {
     if (valid) {
       // 将选择的permissionId带上
       form.permissionIds = permissionTreeRef.value.getCheckedKeys()
-      console.log(form)
       const { code } = form.id ? await reqUpdateRole(form) : await reqAddRole(form)
       if (code === '200') {
         ElMessage({
@@ -84,27 +84,30 @@ async function addRole() {
   })
 }
 
-const fillForm = (myForm) => {
-  nextTick(() => {
-    Object.keys(form).forEach((key) => {
-      if (key !== 'permissionIds') form[key] = myForm[key]
+async function getRoleData(id) {
+  const { code, data, msg } = await getRoleById(id)
+  if (code === '200') {
+    for (const key in form) {
+      if (data.role[key] !== undefined) form[key] = data.role[key]
+    }
+    form.permissionIds = data.permissions
+    nextTick(() => {
+      permissionTreeRef.value.setCheckedKeys(form.permissionIds)
     })
-    permissionTreeRef.value.setCheckedKeys(myForm.id)
-  })
+  } else console.log(msg)
 }
 
 watch(
   () => props.dialogVisible,
-  (value) => {
-    if (value && props.roleItem) {
-      fillForm(props.roleItem)
+  async (value) => {
+    if (value && props.id) {
+      getRoleData(props.id)
     } else if (!value) {
       form.id = ''
-
       ruleFormRef.value.resetFields()
-      nextTick(() => {
-        permissionTreeRef.value.setCheckedKeys(0)
-      })
+      // nextTick(() => {
+      //   permissionTreeRef.value.setCheckedKeys(0)
+      // })
     }
   }
 )

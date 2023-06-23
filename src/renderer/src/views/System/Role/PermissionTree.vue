@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { onBeforeMount, reactive, ref } from 'vue'
-import { reqGetMenuTree, reqGetRole } from '@api/role'
+import { getMenuTree } from '@api/role'
 
 const treeControl = reactive({
   extend: false,
@@ -35,7 +35,7 @@ const defaultProps = {
 
 const menuTree = ref([])
 onBeforeMount(async () => {
-  const { code, msg, data } = await reqGetMenuTree()
+  const { code, msg, data } = await getMenuTree()
   if (code === '200') {
     menuTree.value = data
   } else console.log(msg)
@@ -54,14 +54,8 @@ const getCheckedKeys = () => {
   return treeRef.value!.getCheckedKeys(false)
 }
 
-const setCheckedKeys = async (id) => {
-  if (id) {
-    const { code, data, msg } = await reqGetRole(id)
-    if (code === '200') {
-      data.permissions
-      treeRef.value!.setCheckedKeys(data.permissions)
-    } else console.log(msg)
-  } else treeRef.value!.setCheckedKeys([])
+const setCheckedKeys = (permissions) => {
+  treeRef.value!.setCheckedKeys(permissions)
 }
 
 defineExpose({

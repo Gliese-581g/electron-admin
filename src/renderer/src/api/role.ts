@@ -9,7 +9,9 @@ export function reqGetRoleList(params: roleParams): Promise<IDefaultResponse> {
     params
   })
 }
-export function reqGetRole(id): Promise<IDefaultResponse> {
+
+// 获取用户详情
+export function getRoleById(id): Promise<IDefaultResponse> {
   return request({
     url: `/system/role/get/${id}`,
     method: 'get'
@@ -30,7 +32,7 @@ export function reqUpdateRole(data: addRoleParams): Promise<IDefaultResponse> {
     data
   })
 }
-export function reqGetMenuTree(): Promise<IDefaultResponse> {
+export function getMenuTree(): Promise<IDefaultResponse> {
   return request({
     url: '/system/menu/tree',
     method: 'get'

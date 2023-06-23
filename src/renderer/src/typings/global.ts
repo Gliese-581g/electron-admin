@@ -15,6 +15,28 @@ export interface routeType {
   }
   children?: routeType[]
 }
+export interface IRole {
+  createBy: string
+  createTime: number
+  dataPrivileges: number
+  descript: string
+  enabled: 1 | 0
+  id: string
+  roleName: string
+  rolePerm: string
+  unitId: string
+  updateBy: string | null
+  updateTime: number | null
+}
+
+export interface roleParams {
+  current: number // 当前页
+  size: number // 分页大小
+  roleName?: string // 角色名称
+  rolePerm?: string //	角色编码
+  enabled?: '0' | '1' //是否启用（0：禁用；1：启用）
+}
+
 export interface IUser {
   id: string
   username: string //用户名

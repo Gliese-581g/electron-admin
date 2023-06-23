@@ -2,43 +2,34 @@
   <div class="second-menu">
     <h1 class="menu_title">{{ route.name }}</h1>
     <el-divider />
-    <ul class="menu_list">
+    <ul v-if="route.children" class="menu_list">
       <li
         v-for="item in route.children"
         :key="item.id"
-        :class="{ activeIcon: activeIdx === item.id }"
-        @click="handleActive(item)"
+        :class="{ activeIcon: route.activeIdx === item.id }"
       >
-        <el-icon v-if="item.meta.icon">
-          <component :is="formatIconName(item)"></component>
-        </el-icon>
-        <span>{{ item.name }}</span>
+        <router-link :to="item.path" :class="{ activeIcon: route.activeIdx === item.id }">
+          <el-icon v-if="item.meta.icon">
+            <component :is="formatIconName(item)"></component>
+          </el-icon>
+          <span>{{ item.name }}</span>
+        </router-link>
       </li>
     </ul>
   </div>
 </template>
 <script setup lang="ts">
 import { routeType } from '@store/types'
-import { ref } from 'vue'
 
-import { useRouter } from 'vue-router'
-const myRouter = useRouter()
-
-const props = defineProps<{
+defineProps<{
   route: {
-    initId: string | object
+    activeIdx: string
     name: string
     children: routeType[]
   }
 }>()
 function formatIconName(route) {
   return route.meta.icon.replace(/^el-icon-/, '')
-}
-console.log(props.route.initId)
-const activeIdx = ref(props.route.initId)
-function handleActive(route) {
-  activeIdx.value = route.id
-  myRouter.push(route.path)
 }
 </script>
 
@@ -50,7 +41,6 @@ function handleActive(route) {
   li {
     display: flex;
     align-items: center;
-    cursor: pointer;
     margin: 30px 10px;
     .el-icon {
       margin-right: 5px;

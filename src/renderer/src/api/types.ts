@@ -1,6 +1,6 @@
 export interface roleParams {
-  current: string // 当前页
-  size: string // 分页大小
+  current: number // 当前页
+  size: number // 分页大小
   roleName?: string // 角色名称
   rolePerm?: string //	角色编码
   enabled?: '0' | '1' //是否启用（0：禁用；1：启用）

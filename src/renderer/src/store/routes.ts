@@ -9,13 +9,20 @@ export const useRoutesStore = defineStore('routes', () => {
   //  路由表
   const userStore = useUserStore()
   const routes = ref<routeType[]>([])
-  const routesMap = ref([])
+  const routesMap = ref<
+    {
+      name: string
+      path: string
+      component: any
+      meta: any
+    }[]
+  >([])
+
   async function getRoutes() {
-    const { code, data, msg } = await reqGetRouters(userStore.rolePerm)
+    const { code, data, msg } = await reqGetRouters(userStore.role.rolePerm)
     if (code === '200') {
       routes.value = data
       routesMap.value = generateRoute(routes.value)
-      console.log(routesMap)
     } else console.log(msg)
   }
   return { routes, getRoutes, routesMap }
