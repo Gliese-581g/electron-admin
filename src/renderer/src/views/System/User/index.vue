@@ -1,5 +1,5 @@
 <template>
-  <div class="table-box">
+  <div v-loading="!userList.length" class="table-box">
     <div class="table-header">
       <span class="table-title">用户列表</span>
       <div class="table-edit">
@@ -8,7 +8,7 @@
       </div>
     </div>
     <AddUser :id="userId" v-model:dialogVisible="dialogVisible" @get-user-list="getUserList" />
-    <el-table v-if="userList.length" :data="userList" style="width: 100%" border>
+    <el-table :data="userList" style="width: 100%" border>
       <el-table-column type="selection" align="center" fixed min-width="70" />
       <el-table-column label="用户名称" prop="username" align="center" min-width="150" />
       <el-table-column label="真实姓名" prop="realName" align="center" min-width="150" />

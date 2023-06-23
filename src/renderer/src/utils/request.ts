@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios'
 import { IResponse } from './types'
+import NProgress from './progress'
 const service: AxiosInstance = axios.create({
   baseURL: '/api',
   timeout: 4000
@@ -7,6 +8,7 @@ const service: AxiosInstance = axios.create({
 
 service.interceptors.request.use(
   (config) => {
+    NProgress.start()
     if (sessionStorage.getItem('TOKEN')) {
       config.headers.Authorization = sessionStorage.getItem('TOKEN')
     }
@@ -16,9 +18,14 @@ service.interceptors.request.use(
 )
 service.interceptors.response.use(
   (res: AxiosResponse) => {
+    NProgress.done()
+
     return res
   },
-  (err) => Promise.reject(err)
+  (err) => {
+    NProgress.done()
+    Promise.reject(err)
+  }
 )
 
 const request = <T = IResponse>(config: AxiosRequestConfig): Promise<T> => {

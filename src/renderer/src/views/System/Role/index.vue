@@ -1,5 +1,5 @@
 <template>
-  <div class="table-box">
+  <div v-loading="!roleList.length" class="table-box">
     <SearchRole @get-role-list="getRoleList" />
     <div class="table-header">
       <span class="table-title">角色列表</span>
