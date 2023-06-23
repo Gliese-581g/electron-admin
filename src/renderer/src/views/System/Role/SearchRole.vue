@@ -13,7 +13,7 @@
       </el-select>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="roleStore.searchRole(searchForm)"> 搜索 </el-button>
+      <el-button type="primary" @click="emit('getRoleList', searchForm)"> 搜索 </el-button>
       <el-button @click="resetForm(searchFormRef)">重置</el-button>
     </el-form-item>
   </el-form>
@@ -21,10 +21,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { useRoleStore } from '@store/role'
-
-const roleStore = useRoleStore()
-
+const emit = defineEmits(['getRoleList'])
 const searchFormRef = ref()
 const searchForm = reactive<{
   roleName: string
@@ -37,13 +34,12 @@ const searchForm = reactive<{
 })
 
 function resetForm(formEl) {
-  roleStore.getRoleList({
-    current: '1',
-    size: '8'
-  })
   if (!formEl) return
   formEl.resetFields()
+  emit('getRoleList')
 }
 </script>
 
 <style lang="scss" scoped></style>
+
+// 本地筛选

@@ -1,10 +1,7 @@
 import { reactive } from 'vue'
-import { useRoleStore } from '@store/role'
-export const useRulesStore = (id) => {
-  const roleStore = useRoleStore()
-
+export const useRulesStore = (id, roleList) => {
   const validateName = (_rule: any, value: any, callback: any) => {
-    const repeatTimes = roleStore.roleList.filter((item) => item.roleName === value).length
+    const repeatTimes = roleList.value.filter((item) => item.roleName === value).length
     const isRepeat =
       (repeatTimes >= 2 && id.value) || (repeatTimes >= 1 && !id.value) ? true : false
     if (isRepeat) {
@@ -13,7 +10,7 @@ export const useRulesStore = (id) => {
     callback()
   }
   const validatePerm = (_rule: any, value: any, callback: any) => {
-    const repeatTimes = roleStore.roleList.filter((item) => item.rolePerm === value).length
+    const repeatTimes = roleList.value.filter((item) => item.rolePerm === value).length
 
     const isRepeat =
       (repeatTimes >= 2 && id.value) || (repeatTimes >= 1 && !id.value) ? true : false

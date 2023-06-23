@@ -46,7 +46,7 @@ export function reqDeleteUser(id): Promise<IDefaultResponse> {
     method: 'get'
   })
 }
-// 获取角色详情
+// 获取用户详情
 export function getUserById(id): Promise<IDefaultResponse> {
   return request({
     url: `/system/user/get/${id}`,

@@ -3,8 +3,8 @@
     <div class="table-header">
       <span class="table-title">用户列表</span>
       <div class="table-edit">
-        <el-button type="primary" :icon="Plus" @click="addRole">新增用户</el-button>
-        <el-button type="danger" :icon="Delete" @click="addRole">删除</el-button>
+        <el-button type="primary" :icon="Plus" @click="handleAdd">新增用户</el-button>
+        <el-button type="danger" :icon="Delete" @click="handleAdd">删除</el-button>
       </div>
     </div>
     <AddUser :id="userId" v-model:dialogVisible="dialogVisible" @get-user-list="getUserList" />
@@ -80,7 +80,7 @@ const handlePageChange = () => {
   getUserList()
 }
 const userId = ref('')
-function addRole() {
+function handleAdd() {
   userId.value = ''
   dialogVisible.value = true
 }
