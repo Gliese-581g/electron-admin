@@ -49,6 +49,7 @@ const breadcrumb = reactive<{
   pIcon: '',
   icon: ''
 })
+// TODO 刷新丢失，是否做持久化存储
 
 const routeTabs = reactive<
   {
@@ -96,6 +97,9 @@ watch(
     .breadcrumb {
       display: flex;
       align-items: center;
+      .el-icon {
+        margin-right: 3px;
+      }
     }
   }
 }
