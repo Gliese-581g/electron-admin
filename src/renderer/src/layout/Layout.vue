@@ -18,15 +18,6 @@
 import SideBar from './components/SideBar/SideBar.vue'
 import TopBar from './components/TopBar/TopBar.vue'
 import DashBoard from './components/DashBoard/DashBoard.vue'
-
-import { useUserStore } from '@store/user'
-import { onBeforeMount } from 'vue'
-
-onBeforeMount(async () => {
-  // 请求用户信息，保存用户信息
-  const userStore = useUserStore()
-  await userStore.geUserInfo()
-})
 </script>
 
 <style lang="scss" scoped></style>
