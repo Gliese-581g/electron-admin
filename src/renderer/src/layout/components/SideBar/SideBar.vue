@@ -7,7 +7,7 @@
         </el-icon>
       </li>
       <li
-        v-for="route in routes"
+        v-for="route in routesStore.asyncRoutes"
         :key="route.id"
         :class="{ activeIcon: activeIdx === route.id }"
         @click="handleActive(route)"
@@ -24,14 +24,11 @@
 
 <script setup lang="ts">
 import { useRoutesStore } from '@store/routes'
-import { routeType } from '@store/types'
-import { storeToRefs } from 'pinia'
 import { ref, reactive, watch } from 'vue'
 import SecondMenu from './SecondMenu.vue'
 import { useRoute } from 'vue-router'
 
 const routesStore = useRoutesStore()
-const { routes } = storeToRefs(routesStore)
 function formatIconName(route) {
   return route.meta.icon.replace(/^el-icon-/, '')
 }
@@ -56,7 +53,7 @@ function handleActive(route) {
 watch(
   routesMap,
   (newVal) => {
-    const initial = routes.value.find((route) => route.id === newVal.meta.pid)
+    const initial = routesStore.asyncRoutes.find((route) => route.id === newVal.meta.pid)
     handleActive(initial)
     activeRoute.activeIdx = routesMap.meta.id || ''
   },

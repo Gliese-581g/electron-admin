@@ -19,7 +19,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { routeType } from '@store/types'
+import { routeType } from '@store/routes'
 
 defineProps<{
   route: {

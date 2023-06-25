@@ -2,14 +2,14 @@
   <ul class="user-bar">
     <li>
       <el-dropdown trigger="click">
-        <span class="el-dropdown-link">
+        <span v-if="userStore.userInfo" class="el-dropdown-link">
           <el-avatar :src="userStore.userInfo.avatar" />
           <el-icon class="el-icon--right"><arrow-down /></el-icon>
         </span>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="dialogVisible = true">切换角色</el-dropdown-item>
-            <el-dropdown-item @click="unLogin">退出登录</el-dropdown-item>
+            <el-dropdown-item @click="signOut">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -35,16 +35,18 @@
 
 <script setup lang="ts">
 import { useUserStore } from '@store/user'
+import { useAuthStore } from '@store/auth'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ChangeRole from './ChangeRole.vue'
 
 const userStore = useUserStore()
+const authStore = useAuthStore()
 
 const router = useRouter()
-const unLogin = () => {
-  sessionStorage.removeItem('TOKEN')
-  userStore.reset()
+const signOut = () => {
+  authStore.$reset()
+  userStore.$reset()
   router.push('/login')
 }
 

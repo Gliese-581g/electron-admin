@@ -5,10 +5,10 @@
         <span :id="titleId" :class="titleClass">切换角色</span>
       </div>
     </template>
-    <div class="role-box">
+    <div v-if="userInfo" class="role-box">
       <el-avatar :src="userInfo.avatar"></el-avatar>
       <span>您当前的身份</span>
-      <span class="role-name">{{ role.roleName }}</span>
+      <span class="role-name">{{ activeRole.roleName }}</span>
       <el-dropdown v-if="roles.length > 1" trigger="click" @command="handleCommand">
         <span class="el-dropdown-link">
           修改<el-icon class="el-icon--right"><arrow-down /></el-icon>
@@ -16,11 +16,11 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item
-              v-for="item in roles"
-              :key="item.id"
-              :command="item.id"
-              :disabled="item.id === role.id"
-              >{{ item.roleName }}</el-dropdown-item
+              v-for="role in roles"
+              :key="role.id"
+              :command="role.id"
+              :disabled="role.id === activeRole.id"
+              >{{ role.roleName }}</el-dropdown-item
             >
           </el-dropdown-menu>
         </template>
@@ -34,8 +34,10 @@ import { computed } from 'vue'
 import { useUserStore } from '@store/user'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
+import { useRoutesStore } from '@store/routes'
+const routesStore = useRoutesStore()
 const userStore = useUserStore()
-const { userInfo, roles, role } = storeToRefs(userStore)
+const { userInfo, roles, activeRole } = storeToRefs(userStore)
 
 const props = defineProps<{
   dialogVisible: boolean
@@ -52,10 +54,12 @@ const visible = computed({
 })
 const router = useRouter()
 const handleCommand = (command) => {
-  userStore.changeRole(command)
-  router.push('/').then(() => {
-    location.reload()
-  })
+  userStore.changeActiveRole(command)
+  visible.value = false
+  // TODO 如何做到无痕切换菜单
+  routesStore.$reset()
+  location.reload()
+  router.push('/')
 }
 </script>
 
