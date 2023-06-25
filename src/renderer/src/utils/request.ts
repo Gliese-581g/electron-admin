@@ -1,6 +1,6 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios'
-import { IResponse } from './types'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import NProgress from './progress'
+import { useAuthStore } from '@store/auth'
 const service: AxiosInstance = axios.create({
   baseURL: '/api',
   timeout: 4000
@@ -9,8 +9,9 @@ const service: AxiosInstance = axios.create({
 service.interceptors.request.use(
   (config) => {
     NProgress.start()
-    if (sessionStorage.getItem('TOKEN')) {
-      config.headers.Authorization = sessionStorage.getItem('TOKEN')
+    const authStore = useAuthStore()
+    if (authStore.isAuth) {
+      config.headers.Authorization = authStore.getToken()
     }
     return config
   },
@@ -19,22 +20,26 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (res: AxiosResponse) => {
     NProgress.done()
-
-    return res
+    // 如果是ArrayBuffer直接返回
+    if (res.data instanceof ArrayBuffer) return res.data
+    const { code, msg, data } = res.data
+    if (code === '200') {
+      return data
+    } else return Promise.reject({ code, msg })
   },
   (err) => {
     NProgress.done()
-    Promise.reject(err)
+    if (err) Promise.reject(err)
   }
 )
 
-const request = <T = IResponse>(config: AxiosRequestConfig): Promise<T> => {
+const request = (config): Promise<any> => {
   const conf = config
   return new Promise((resolve, reject) => {
     service
-      .request<unknown, AxiosResponse<IResponse>>(conf)
-      .then((res: AxiosResponse<IResponse>) => {
-        resolve(res.data as T)
+      .request(conf)
+      .then((data) => {
+        resolve(data)
       })
       .catch((res) => reject(res))
   })
