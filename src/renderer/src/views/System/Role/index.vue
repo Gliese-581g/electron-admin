@@ -1,6 +1,6 @@
 <template>
-  <div v-loading="!roleList.length" class="table-box">
-    <SearchRole @get-role-list="getRoleList" />
+  <div v-loading="!rolePage.length" class="table-box">
+    <SearchRole @get-list="getList" />
     <div class="table-header">
       <span class="table-title">角色列表</span>
       <div class="table-edit">
@@ -8,9 +8,9 @@
         <el-icon><Refresh /></el-icon>
       </div>
     </div>
-    <AddRole :id="id" v-model:dialog-visible="dialogVisible" :role-list="roleList" />
+    <AddRole :id="id" v-model:dialog-visible="dialogVisible" :role-page="rolePage" />
 
-    <el-table :data="roleList" border>
+    <el-table :data="rolePage" border>
       <el-table-column type="index" align="center" label="编号" width="100" />
       <el-table-column label="角色名称" prop="roleName" min-width="150" align="center" />
       <el-table-column label="权限编码" prop="rolePerm" min-width="150" align="center" />
@@ -45,8 +45,8 @@
       layout="->,total, sizes, prev, pager, next, jumper"
       :total="total"
       style="margin-top: 20px"
-      @size-change="getRoleList()"
-      @current-change="getRoleList()"
+      @size-change="getList()"
+      @current-change="getList()"
     />
   </div>
 </template>
@@ -54,17 +54,15 @@
 <script setup lang="ts">
 import { onBeforeMount, reactive, ref } from 'vue'
 
-import { reqGetRoleList } from '@api/role'
-import { IRole } from '@renderer/typings/global'
+import * as roleApi from '@api/system/role'
 
 import { Plus } from '@element-plus/icons-vue'
 import AddRole from './AddRole.vue'
 import SearchRole from './SearchRole.vue'
-import { reqDeleteRole } from '@api/role'
 import { getDate } from '@utils/index'
 
 const dialogVisible = ref(false)
-const roleList = ref<IRole[]>([])
+const rolePage = ref<roleApi.IRole[]>([])
 
 const page = reactive({
   current: 1,
@@ -73,16 +71,15 @@ const page = reactive({
 const total = ref(0)
 
 // 函数重载
-async function getRoleList(searchForm = {}) {
-  const { code, msg, data } = await reqGetRoleList(Object.assign(page, searchForm))
-  if (code === '200') {
-    roleList.value = data.records
-    total.value = data.total
-  } else console.log(msg)
+async function getList(searchForm = {}) {
+  const data = await roleApi.getRolePage(Object.assign(page, searchForm))
+
+  rolePage.value = data.records
+  total.value = data.total
 }
 
 onBeforeMount(() => {
-  getRoleList()
+  getList()
 })
 
 const id = ref('')
@@ -91,10 +88,10 @@ function editRole(value) {
   dialogVisible.value = true
 }
 async function deleteRole(id) {
-  const { code, msg } = await reqDeleteRole(id)
+  const { code, msg } = await roleApi.deleteRole(id)
   if (code === '200') {
     ElMessage.success('角色删除成功')
-    getRoleList()
+    getList()
   } else ElMessage.error(`角色删除失败，失败原因：${msg}`)
 }
 </script>

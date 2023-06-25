@@ -33,6 +33,7 @@ function formatIconName(route) {
   return route.meta.icon.replace(/^el-icon-/, '')
 }
 const routesMap = useRoute()
+
 const activeIdx = ref('')
 
 const activeRoute = reactive<{

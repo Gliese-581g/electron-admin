@@ -13,7 +13,7 @@
       </el-select>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="emit('getRoleList', searchForm)"> 搜索 </el-button>
+      <el-button type="primary" @click="emit('getList', searchForm)"> 搜索 </el-button>
       <el-button @click="resetForm(searchFormRef)">重置</el-button>
     </el-form-item>
   </el-form>
@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-const emit = defineEmits(['getRoleList'])
+const emit = defineEmits(['getList'])
 const searchFormRef = ref()
 const searchForm = reactive<{
   roleName: string
@@ -36,7 +36,7 @@ const searchForm = reactive<{
 function resetForm(formEl) {
   if (!formEl) return
   formEl.resetFields()
-  emit('getRoleList')
+  emit('getList')
 }
 </script>
 

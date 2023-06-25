@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { onBeforeMount, reactive, ref } from 'vue'
-import { getMenuTree } from '@api/role'
+import * as roleApi from '@api/system/role'
 
 const treeControl = reactive({
   extend: false,
@@ -35,7 +35,7 @@ const defaultProps = {
 
 const menuTree = ref([])
 onBeforeMount(async () => {
-  const { code, msg, data } = await getMenuTree()
+  const { code, msg, data } = await roleApi.getMenuTree()
   if (code === '200') {
     menuTree.value = data
   } else console.log(msg)

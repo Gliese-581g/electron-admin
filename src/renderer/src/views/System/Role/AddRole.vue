@@ -30,15 +30,14 @@
 
 <script setup lang="ts">
 import { computed, ref, reactive, watch, nextTick, toRef } from 'vue'
-import { reqAddRole, reqUpdateRole, getRoleById } from '@api/role'
-import { IRole } from '@renderer/typings/global'
+import * as roleApi from '@api/system/role'
 
 import { useRulesStore } from './validate'
 import PermissionTree from './PermissionTree.vue'
 
 const props = defineProps<{
   id: string
-  roleList: IRole[]
+  rolePage: roleApi.IRole[]
   dialogVisible: boolean
 }>()
 const emit = defineEmits(['update:dialogVisible'])
@@ -59,7 +58,7 @@ const form = reactive({
   descript: '',
   permissionIds: []
 })
-const rulesStore = useRulesStore(toRef(form, 'id'), toRef(props, 'roleList'))
+const rulesStore = useRulesStore(toRef(form, 'id'), toRef(props, 'rolePage'))
 const ruleFormRef = ref()
 const permissionTreeRef = ref()
 async function addRole() {
@@ -67,7 +66,7 @@ async function addRole() {
     if (valid) {
       // 将选择的permissionId带上
       form.permissionIds = permissionTreeRef.value.getCheckedKeys()
-      const { code } = form.id ? await reqUpdateRole(form) : await reqAddRole(form)
+      const { code } = form.id ? await roleApi.updateRole(form) : await roleApi.AddRole(form)
       if (code === '200') {
         ElMessage({
           message: form.id ? '修改成功' : '添加成功',
@@ -85,7 +84,7 @@ async function addRole() {
 }
 
 async function getRoleData(id) {
-  const { code, data, msg } = await getRoleById(id)
+  const { code, data, msg } = await roleApi.getRoleById(id)
   if (code === '200') {
     for (const key in form) {
       if (data.role[key] !== undefined) form[key] = data.role[key]
