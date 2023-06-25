@@ -1,29 +1,45 @@
 import { defineStore } from 'pinia'
-import { reqGetRouters } from '@api/login'
-import { ref } from 'vue'
+import * as loginApi from '@api/login'
 import { useUserStore } from './user'
-import { routeType } from './types'
 import { generateRoute } from '@renderer/utils/generateRoute'
 
-export const useRoutesStore = defineStore('routes', () => {
-  //  路由表
-  const userStore = useUserStore()
-  const routes = ref<routeType[]>([])
-  const routesMap = ref<
-    {
-      name: string
-      path: string
-      component: any
-      meta: any
-    }[]
-  >([])
-
-  async function getRoutes() {
-    const { code, data, msg } = await reqGetRouters(userStore.role.rolePerm)
-    if (code === '200') {
-      routes.value = data
-      routesMap.value = generateRoute(routes.value)
-    } else console.log(msg)
+export interface routeType {
+  id: string //ID
+  name: string //路由名称
+  hidden: boolean //显示状态
+  redirect: string //重写向地址
+  component: string //组件路径
+  alwaysShow: boolean //是否总显示
+  query: string //路由参数
+  path: string //路由地址
+  meta: {
+    title: string //标题
+    icon: string //图标
+    noCache: boolean //是否缓存
+    link: string //外链
   }
-  return { routes, getRoutes, routesMap }
+  children?: routeType[]
+}
+
+export const useRoutesStore = defineStore('routes', {
+  state: () => {
+    return {
+      asyncRoutes: [] as routeType[],
+      // 判断有没有请求过路由，当请求的路由为空时，无需重复请求
+      hasSetAsyncRoute: false
+    }
+  },
+  getters: {
+    // 取出一级路由的所有子路由
+    routesMap: (state) => generateRoute(state.asyncRoutes)
+  },
+  actions: {
+    // 获取动态路由表
+    async getAsyncRoutes() {
+      const userStore = useUserStore()
+      const data = await loginApi.getAsyncRoutes(userStore.rolePerm)
+      this.asyncRoutes = data
+      this.hasSetAsyncRoute = true
+    }
+  }
 })

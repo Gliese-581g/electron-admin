@@ -1,7 +1,5 @@
-export interface IDefaultResponse {
+export interface IResponse {
   code: string
   msg: string
   data: any
 }
-
-export type IResponse = ArrayBuffer | IDefaultResponse

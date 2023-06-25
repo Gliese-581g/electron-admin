@@ -4,7 +4,7 @@ const routes = [
   {
     path: '/',
     component: Layout,
-    name: 'layout',
+    name: 'Layout',
     // 要配置children不然eslint会报错
     redirect: '/dashboard',
     children: []

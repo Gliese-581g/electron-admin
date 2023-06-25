@@ -7,7 +7,7 @@ export function generateRoute(routes) {
     } else return accumulator
   }, [])
 }
-
+// 将需要的数据加入到meta字段
 function formatRoute(routes, pid, pName, pIcon) {
   const viteComponent = import.meta.glob('@views/**/*.vue')
   return routes.map((route) => {
