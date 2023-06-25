@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { reqGetCaptcha, loginByMobile } from '@api/login'
+import * as loginApi from '@api/login'
 import { Encrypt } from '@utils/aes'
 import { useRouter } from 'vue-router'
 
@@ -71,7 +71,7 @@ const formRef = ref()
 const getLoginCaptcha = () => {
   formRef.value.validateField(['phone'], async (valid) => {
     if (valid) {
-      const { code, msg } = await reqGetCaptcha({ mobile: Encrypt(form.phone) })
+      const { code, msg } = await loginApi.sendSmsCode({ mobile: Encrypt(form.phone) })
       if (code === '200') {
         ElMessage.success('发送验证码成功')
         countDown.value = 60
@@ -86,7 +86,7 @@ const getLoginCaptcha = () => {
 const login = () => {
   formRef.value.validate(async (valid) => {
     if (valid) {
-      const { code, msg, data } = await loginByMobile({
+      const { code, msg, data } = await loginApi.smsLogin({
         mobile: Encrypt(form.phone),
         captcha: Encrypt(form.captcha)
       })

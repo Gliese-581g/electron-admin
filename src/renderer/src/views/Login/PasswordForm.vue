@@ -39,20 +39,22 @@
       <span class="forget-pwd">忘记密码</span>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" round class="login-btn" @click="login">登录</el-button>
+      <el-button type="primary" round class="login-btn" @click="handleLogin">登录</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script setup lang="ts">
 import { reactive, onBeforeMount, ref } from 'vue'
-import { reqGetCaptchaImage, reqLogin } from '@api/login'
+import * as loginApi from '@api/login'
 import { nanoid } from 'nanoid'
 import { Encrypt } from '@utils/aes'
 import { useRouter } from 'vue-router'
 import { abToDataUrl2 } from '@utils/index'
-import { useMemoPassword } from './hooks'
+import { useMemoPassword } from './hook'
 import { useUserStore } from '@store/user'
+import { useAuthStore } from '@store/auth'
+const AuthStore = useAuthStore()
 const userStore = useUserStore()
 const router = useRouter()
 
@@ -76,7 +78,7 @@ const imgUrl = ref('')
 const key = nanoid() // 随机UUID
 
 async function getCaptchaImage(): Promise<void> {
-  const data = await reqGetCaptchaImage({
+  const data = await loginApi.getCaptchaImage({
     key
   })
   // arrayBuffer转base64的data:url
@@ -89,31 +91,34 @@ onBeforeMount(() => {
 // 表单校验提交表单
 const ruleFormRef = ref()
 const errorMsg = ref('')
-function login() {
+function handleLogin() {
   ruleFormRef.value.validate(async (valid, fields) => {
     if (valid) {
       //登录认证，获取token
-      const { code, msg, data } = await reqLogin({
-        // aes加密表单信息
-        username: Encrypt(ruleForm.username),
-        password: Encrypt(ruleForm.password),
-        key,
-        captcha: ruleForm.captcha
-      })
-      if (code === '200') {
+      try {
+        const data = await loginApi.login({
+          // aes加密表单信息
+          username: Encrypt(ruleForm.username),
+          password: Encrypt(ruleForm.password),
+          key,
+          captcha: ruleForm.captcha
+        })
         // 保存token
-        sessionStorage.setItem('TOKEN', data)
+        AuthStore.setToken(data)
         // 记住密码功能
         setMemoPassword(ruleForm.username, ruleForm.password)
         await userStore.geUserInfo()
-
         //登录后跳转
         ElMessage.success('登录成功')
         router.push('/')
+      } catch (error) {
+        console.log(error)
+        // if (code === '200') {
+        // }
+        // if (code === '10002') errorMsg.value = msg
+        // if (code === '10013') errorMsg.value = msg
+        // if (code === '10022') errorMsg.value = msg
       }
-      if (code === '10002') errorMsg.value = msg
-      if (code === '10013') errorMsg.value = msg
-      if (code === '10022') errorMsg.value = msg
     } else {
       console.log('error submit!', fields)
     }
