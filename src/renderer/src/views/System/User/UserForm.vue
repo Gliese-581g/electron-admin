@@ -37,13 +37,18 @@
       </el-form-item>
       <el-form-item label="所属机构" prop="unitId" required>
         <el-select v-model="form.unitId" placeholder="请选择" size="large">
-          <el-option v-for="item in unitList" :key="item.id" :label="item.name" :value="item.id" />
+          <el-option
+            v-for="item in options.unitList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="所属岗位" prop="postIds" required>
         <el-select v-model="form.postIds" multiple placeholder="请选择" size="large">
           <el-option
-            v-for="item in postList"
+            v-for="item in options.allPost"
             :key="item.id"
             :label="item.postName"
             :value="item.id"
@@ -53,7 +58,7 @@
       <el-form-item label="分配角色" prop="roleIds" required>
         <el-select v-model="form.roleIds" multiple placeholder="请选择" size="large">
           <el-option
-            v-for="item in roleList"
+            v-for="item in options.allRole"
             :key="item.id"
             :label="item.roleName"
             :value="item.id"
@@ -76,19 +81,16 @@
 
 <script setup lang="ts">
 import { computed, onBeforeMount, reactive, ref, toRef, watch } from 'vue'
-import { userUserListStore } from '@store/use-list'
-import { storeToRefs } from 'pinia'
-import { getUserById, reqUserAdd } from '@api/user'
+import * as userApi from '@api/system/user'
 import { useRulesStore } from './validate'
+import { useOptionsStore } from './hook'
 // import { IUser } from '@store/types'
 
-const userListStore = userUserListStore()
-const { postList, unitList, roleList } = storeToRefs(userListStore)
 const props = defineProps<{
   dialogVisible: boolean
   id: string
 }>()
-const emit = defineEmits(['update:dialogVisible', 'getUserList'])
+const emit = defineEmits(['update:dialogVisible', 'getUserPage'])
 
 const dialogFormVisible = computed({
   get() {
@@ -113,49 +115,55 @@ const form = reactive({
   postIds: [], //岗位
   unitId: '' //机构ID
 })
-const rulesStore = useRulesStore(toRef(form, 'id'))
+const rulesStore = useRulesStore()
 
-onBeforeMount(() => {
-  Promise.all([userListStore.getUnitList(), userListStore.getAllPost(), userListStore.getAllRole()])
-})
 const ruleFormRef = ref()
 async function addUser() {
   ruleFormRef.value.validate(async (valid) => {
     if (valid) {
-      const { code } = form.id ? await reqUserAdd(form) : await reqUserAdd(form)
-      if (code === '200') {
+      try {
+        form.id ? await userApi.updateUser(form) : await userApi.addUser(form)
         ElMessage({
           message: form.id ? '修改成功' : '添加成功',
           type: 'success'
         })
         dialogFormVisible.value = false
-        emit('getUserList')
-      } else {
-        ElMessage({
-          message: form.id ? '修改失败' : '添加失败',
-          type: 'error'
-        })
+        emit('getUserPage')
+      } catch (error: any) {
+        if (error?.msg) {
+          ElMessage({
+            message: form.id ? `修改失败，${error.msg} ` : `添加失败，${error.msg} `,
+            type: 'error'
+          })
+        } else {
+          console.error(error)
+        }
       }
     }
   })
 }
 
-async function getUserData(id) {
-  const { code, data, msg } = await getUserById(id)
-  if (code === '200') {
-    form.roleIds = data.roleIds
-    form.postIds = data.postIds
-    for (const key in form) {
-      if (data.user[key] !== undefined) form[key] = data.user[key]
-    }
-  } else console.log(msg)
+async function getDetail(id) {
+  const data = await userApi.getUserDetail(id)
+  form.roleIds = data.roleIds
+  form.postIds = data.postIds
+  for (const key in form) {
+    if (data.user[key] !== undefined) form[key] = data.user[key]
+  }
 }
+
+const optionsStore = useOptionsStore()
+const options = toRef(optionsStore.options)
+
+onBeforeMount(() => {
+  optionsStore.getOptions()
+})
 
 watch(
   () => props.dialogVisible,
   async (value) => {
     if (value && props.id) {
-      getUserData(props.id)
+      getDetail(props.id)
     } else if (!value) {
       form.id = ''
       ruleFormRef.value.resetFields()

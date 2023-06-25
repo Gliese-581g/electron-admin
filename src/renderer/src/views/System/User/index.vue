@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="!userList.length" class="table-box">
+  <div class="table-box">
     <div class="table-header">
       <span class="table-title">用户列表</span>
       <div class="table-edit">
@@ -7,8 +7,9 @@
         <el-button type="danger" :icon="Delete" @click="handleAdd">删除</el-button>
       </div>
     </div>
-    <AddUser :id="userId" v-model:dialogVisible="dialogVisible" @get-user-list="getUserList" />
-    <el-table :data="userList" style="width: 100%" border>
+    <!-- 用户表单 -->
+    <UserForm :id="userId" v-model:dialogVisible="dialogVisible" @get-user-page="getUserPage" />
+    <el-table v-loading="!userPage.length" :data="userPage" style="width: 100%" border>
       <el-table-column type="selection" align="center" fixed min-width="70" />
       <el-table-column label="用户名称" prop="username" align="center" min-width="150" />
       <el-table-column label="真实姓名" prop="realName" align="center" min-width="150" />
@@ -33,18 +34,16 @@
               <el-button size="small" type="danger">删除</el-button>
             </template>
           </el-popconfirm>
-          <el-button size="small" type="primary" text @click="handleDelete(scope.row.id)"
-            >更多</el-button
-          >
+          <el-button size="small" type="primary" text>更多</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
-      v-model:current-page="page.currentPage"
-      v-model:page-size="page.pageSize"
+      v-model:current-page="page.current"
+      v-model:page-size="page.size"
       :page-sizes="[6, 8, 10]"
       layout="->,total, sizes, prev, pager, next, jumper"
-      :total="pageTotal"
+      :total="total"
       style="margin-top: 20px"
       @size-change="handlePageChange"
       @current-change="handlePageChange"
@@ -54,30 +53,31 @@
 
 <script setup lang="ts">
 import { onBeforeMount, reactive, ref } from 'vue'
-import { userUserListStore } from '@store/use-list'
-import { storeToRefs } from 'pinia'
 import { Plus, Delete } from '@element-plus/icons-vue'
-import AddUser from './AddUser.vue'
-import { reqDeleteUser } from '@api/user'
-const userListStore = userUserListStore()
-const { userList, pageTotal } = storeToRefs(userListStore)
+import * as userApi from '@api/system/user'
+import UserForm from './UserForm.vue'
 const dialogVisible = ref(false)
 
 const page = reactive({
-  currentPage: 1,
-  pageSize: 8
+  current: 1,
+  size: 8
 })
-const getUserList = () => {
-  userListStore.getUserList({
-    current: page.currentPage,
-    size: page.pageSize
+// 用户列表
+const userPage = ref<userApi.Record[]>([])
+const total = ref(0)
+const getUserPage = async () => {
+  const data = await userApi.getUserPage({
+    current: page.current.toString(),
+    size: page.size.toString()
   })
+  userPage.value = data.records
+  total.value = data.total
 }
 onBeforeMount(() => {
-  getUserList()
+  getUserPage()
 })
 const handlePageChange = () => {
-  getUserList()
+  getUserPage()
 }
 const userId = ref('')
 function handleAdd() {
@@ -99,11 +99,16 @@ const handleEdit = (id) => {
   dialogVisible.value = true
 }
 const handleDelete = async (id) => {
-  const { code, msg } = await reqDeleteUser(id)
-  if (code === '200') {
+  try {
+    await userApi.deleteUser(id)
     ElMessage.success('用户删除成功')
-    getUserList()
-  } else ElMessage.error(`用户删除失败，失败原因：${msg}`)
+    getUserPage()
+  } catch (error: any) {
+    if (error?.msg) {
+      ElMessage.error(`用户删除失败，失败原因：${error.msg}`)
+    }
+    console.error(error)
+  }
 }
 </script>
 

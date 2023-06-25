@@ -1,24 +1,11 @@
 import { reactive } from 'vue'
-import { userUserListStore } from '@store/use-list'
 
-export const useRulesStore = (id) => {
-  const userListStore = userUserListStore()
-
-  const validateName = (_rule: any, value: any, callback: any) => {
-    const repeatTimes = userListStore.userList.filter((item) => item.username === value).length
-    const isRepeat =
-      (repeatTimes >= 2 && id.value) || (repeatTimes >= 1 && !id.value) ? true : false
-    if (isRepeat) {
-      callback(new Error('该用户名已经存在'))
-    }
-    callback()
-  }
+export const useRulesStore = () => {
   const rules = reactive({
     // 验证顺序根据在数组中定义的顺序
     username: [
       { required: true, message: '请输入', trigger: 'change' },
-      { max: 10, message: '长度最长10位', trigger: 'change' },
-      { validator: validateName, trigger: 'blur' }
+      { max: 10, message: '长度最长10位', trigger: 'change' }
     ],
     password: [
       { required: true, message: '请输入', trigger: 'change' },

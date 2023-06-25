@@ -22,14 +22,14 @@ service.interceptors.response.use(
     NProgress.done()
     // 如果是ArrayBuffer直接返回
     if (res.data instanceof ArrayBuffer) return res.data
-    const { code, msg, data } = res.data
+    const { code, data } = res.data
     if (code === '200') {
       return data
-    } else return Promise.reject({ code, msg })
+    } else return Promise.reject(res.data)
   },
   (err) => {
     NProgress.done()
-    if (err) Promise.reject(err)
+    return Promise.reject(err)
   }
 )
 
@@ -41,7 +41,9 @@ const request = (config): Promise<any> => {
       .then((data) => {
         resolve(data)
       })
-      .catch((res) => reject(res))
+      .catch((error) => {
+        reject(error)
+      })
   })
 }
 export default request
