@@ -1,54 +1,76 @@
 import { defineStore } from 'pinia'
-import { reqGetUserInfo } from '@api/login'
-import { ref } from 'vue'
+import * as loginApi from '@api/login'
 // 获取用户信息【得到权限】
 
-interface IRole {
+interface User {
+  userInfo: UserInfo | null
+  permissions: string[]
+  roles: Role[]
+  activeRole: Role
+  activePermission: string
+  hasSetPermission: boolean
+}
+
+interface Role {
   id: string
   roleName: string
   rolePerm: string
 }
+interface UserInfo {
+  id: string
+  username: string
+  realName: string
+  userType: number
+  email: string
+  phone: string
+  gender: number
+  avatar: string
+  enabled: number
+  delFlag: number
+  remark?: any
+}
 
-export const useUserStore = defineStore(
-  'user',
-  () => {
-    const initRole = {
+export const useUserStore = defineStore('user', {
+  state: (): User => ({
+    userInfo: null,
+    //权限信息
+    permissions: [],
+    //角色信息
+    roles: [],
+    activeRole: {
       id: '',
       roleName: '',
       rolePerm: ''
-    }
-
-    const permissions = ref([]),
-      roles = ref<IRole[]>([]),
-      role = ref<IRole>(initRole),
-      userInfo = ref<any>({})
-    async function geUserInfo() {
-      const { code, data, msg } = await reqGetUserInfo()
-      if (code === '200') {
-        permissions.value = data.permissions
-        roles.value = data.roles
-        // 初始化角色为第一个
-        role.value = data.roles[0]
-        userInfo.value = data.userInfo
-      } else {
-        console.log(msg)
-      }
-    }
-    function changeRole(id) {
-      role.value = roles.value.find((item) => item.id === id) || initRole
-      console.log(role.value.roleName)
-    }
-
-    function reset() {
-      permissions.value = []
-      roles.value = []
-      role.value = initRole
-      userInfo.value = {}
-    }
-
-    return { geUserInfo, roles, role, userInfo, changeRole, reset }
+    },
+    activePermission: '',
+    hasSetPermission: false
+  }),
+  getters: {
+    // 角色权限编码
+    rolePerm: (state) => state.activeRole.rolePerm
   },
-  {
-    persist: true
-  }
-)
+  actions: {
+    // 获取用户个人信息并持久化存储
+    async geUserInfo() {
+      const data = await loginApi.getUserInfo()
+      this.permissions = data.permissions
+      this.roles = data.roles
+      this.userInfo = data.userInfo
+      // 初始化角色为第一个
+      this.activeRole = data.roles[0]
+      this.activePermission = this.permissions[0]
+    },
+    // 修改当前角色和权限
+    changeActiveRole(roleId) {
+      this.activeRole =
+        this.roles.find((role, index) => {
+          if (role.id === roleId) {
+            this.activePermission = this.permissions[index]
+            return true
+          }
+          return false
+        }) || this.activeRole
+    }
+  },
+  persist: true
+})
