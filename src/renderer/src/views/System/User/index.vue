@@ -41,7 +41,7 @@
     <el-pagination
       v-model:current-page="page.current"
       v-model:page-size="page.size"
-      :page-sizes="[6, 8, 10]"
+      :page-sizes="[8, 10, 12]"
       layout="->,total, sizes, prev, pager, next, jumper"
       :total="total"
       style="margin-top: 20px"
@@ -60,7 +60,7 @@ const dialogVisible = ref(false)
 
 const page = reactive({
   current: 1,
-  size: 8
+  size: 10
 })
 // 用户列表
 const userPage = ref<userApi.Record[]>([])
@@ -104,7 +104,8 @@ const handleDelete = async (id) => {
     ElMessage.success('用户删除成功')
     getUserPage()
   } catch (error: any) {
-    if (error?.msg) {
+    //如果Promise是reject时都会throw reason，无论reason是不是Error
+    if (!(error instanceof Error)) {
       ElMessage.error(`用户删除失败，失败原因：${error.msg}`)
     }
     console.error(error)
@@ -114,7 +115,6 @@ const handleDelete = async (id) => {
 
 <style lang="scss" scoped>
 .table-box {
-  margin: 40px;
   .table-header {
     display: flex;
     justify-content: space-between;
