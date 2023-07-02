@@ -15,7 +15,7 @@ export interface DictType {
   createTime: number //创建时间
 }
 // 获取字典类型列表
-export function getDictTypePage(params: pageParams) {
+export function getPage(params) {
   return request({
     url: '/system/dict/type/page',
     method: 'get',
