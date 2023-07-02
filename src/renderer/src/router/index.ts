@@ -22,7 +22,6 @@ router.beforeEach(async (to, from) => {
     //获取路由表
     try {
       await routesStore.getAsyncRoutes()
-      console.log(to.path)
       routesStore.routesMap.forEach((route) => {
         router.addRoute('Layout', route)
       })
