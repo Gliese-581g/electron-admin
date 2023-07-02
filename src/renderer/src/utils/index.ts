@@ -41,3 +41,29 @@ export function getDate(n) {
     now.toTimeString().substring(0, 8)
   )
 }
+// 阿拉伯数字字符串转化星期字符串
+export function convertToChineseWeekday(str) {
+  const weekdays = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
+
+  return str.replace(/\d+/g, (match) => {
+    const index = parseInt(match) - 1
+    return weekdays[index]
+  })
+}
+// Date对象转化为'yyyy-MM-dd'
+export function dateToStr(date: Date) {
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  const formattedDate = `${year}-${month}-${day}`
+  return formattedDate
+}
+// 'yyyy-MM-dd'转化为Date对象
+export function strToDate(dateString: string) {
+  const dateArray = dateString.split('-')
+  const year = parseInt(dateArray[0])
+  const month = parseInt(dateArray[1]) - 1
+  const day = parseInt(dateArray[2])
+  const reversedDate = new Date(year, month, day)
+  return reversedDate
+}
