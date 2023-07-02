@@ -21,4 +21,46 @@ const CONFIG = {
   }
 }
 
+export enum DictType {
+  PROCESS_REFUND_TYPE = 'process_refund_type',
+  INTERVIEW_RESULT = 'interview_result',
+  INSTALLMENT_COUNT = 'installment_count',
+
+  // 招生字典
+  RECRUIT_CHARGE_TYPE = 'recruit_charge_type',
+  RECRUIT_REFUND_STATUS = 'recruit_refund_status',
+  RECRUIT_TYPE = 'recruit_type',
+  RECRUIT_COUPON_TYPE = 'recruit_coupon_type',
+  RECRUIT_AUDITIONS_STATUS = 'recruit_auditions_status',
+  RECRUIT_FOLLOW_METHOD = 'recruit_follow_method',
+  RECRUIT_CUSTOMER_LEVEL = 'recruit_customer_level',
+  RECRUIT_DEALSTATUS = 'recruit_dealStatus',
+  RECRUIT_INTENTION = 'recruit_intention',
+  RECRUIT_CONSULT_SITUATION = 'recruit_consult_situation',
+  RECRUIT_EDUCATION_BACKGROUND = 'recruit_education_background',
+
+  // 教学字典
+  CRM_AUDIT_STATUS = 'crm_audit_status',
+  CRM_CLASS_TYPE = 'crm_class_type',
+  CRM_CLASS_STATUS = 'crm_class_status',
+  CRM_CLASS_COURSE = 'crm_class_course',
+  CRM_TEACHING_METHOD = 'crm_teaching_method',
+
+  // 系统字典
+  SYSTEM_MENU_PARENTVIEW = 'system_menu_parentview',
+  SYSTEM_TASK_STATUS = 'system_task_status',
+  SYSTEM_GLOBAL_EXPSTATUS = 'system_global_expstatus',
+  SYSTEM_GLOBAL_TASKGROUP = 'system_global_taskgroup',
+  SYSTEM_GLOBAL_VISIBILITY = 'system_global_visibility',
+  SYSTEM_ALLOW_PROHIBIT = 'system_allow_prohibit',
+  SYSTEM_MISFIRE_POLICY = 'system_misfire_policy',
+  SYSTEM_OPERATOR_TYPE = 'system_operator_type',
+  SYSTEM_NOTICE_TYPE = 'system_notice_type',
+  SYSTEM_GLOBAL_YESORNO = 'system_global_yesorno',
+  SYSTEM_GLOBAL_CACHE = 'system_global_cache',
+  SYSTEM_MENU_TYPE = 'system_menu_type',
+  SYSTEM_GLOBAL_STATUS = 'system_global_status',
+  SYSTEM_GLOBAL_GENDER = 'system_global_gender'
+}
+
 export default CONFIG
