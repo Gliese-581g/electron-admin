@@ -1,24 +1,28 @@
 <template>
   <div class="sidebar">
-    <ul class="first-menu">
-      <li class="logo">
-        <el-icon size="30">
-          <icon-ph-discord-logo-fill></icon-ph-discord-logo-fill>
-        </el-icon>
-      </li>
-      <li
-        v-for="route in routesStore.asyncRoutes"
-        :key="route.id"
-        :class="{ activeIcon: activeIdx === route.id }"
-        @click="handleActive(route)"
-      >
-        <el-icon v-if="!(route.name === '小鹿线')" size="20">
-          <component :is="formatIconName(route)"></component>
-        </el-icon>
-        <span>{{ route.name }}</span>
-      </li>
-    </ul>
-    <SecondMenu :route="activeRoute" />
+    <el-scrollbar>
+      <ul class="first-menu">
+        <li class="logo">
+          <el-icon size="30">
+            <icon-ph-discord-logo-fill></icon-ph-discord-logo-fill>
+          </el-icon>
+        </li>
+        <li
+          v-for="route in routesStore.asyncRoutes"
+          :key="route.id"
+          :class="{ activeIcon: activeIdx === route.id }"
+          @click="handleActive(route)"
+        >
+          <el-icon v-if="!(route.name === '小鹿线')" size="20">
+            <component :is="formatIconName(route)"></component>
+          </el-icon>
+          <span>{{ route.name }}</span>
+        </li>
+      </ul>
+    </el-scrollbar>
+    <el-scrollbar class="second-menu">
+      <SecondMenu :route="activeRoute" />
+    </el-scrollbar>
   </div>
 </template>
 
@@ -91,6 +95,9 @@ watch(
     .activeIcon {
       background-color: var(--el-color-primary);
     }
+  }
+  .second-menu {
+    flex: 1;
   }
 }
 </style>

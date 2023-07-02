@@ -111,13 +111,10 @@ function handleLogin() {
         //登录后跳转
         ElMessage.success('登录成功')
         router.push('/')
-      } catch (error) {
-        console.log(error)
-        // if (code === '200') {
-        // }
-        // if (code === '10002') errorMsg.value = msg
-        // if (code === '10013') errorMsg.value = msg
-        // if (code === '10022') errorMsg.value = msg
+      } catch (error: any) {
+        if (!(error instanceof Error)) {
+          errorMsg.value = error.msg
+        } else console.error(error)
       }
     } else {
       console.log('error submit!', fields)

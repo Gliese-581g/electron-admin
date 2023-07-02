@@ -1,6 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import NProgress from './progress'
 import { useAuthStore } from '@store/auth'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@store/user'
 const service: AxiosInstance = axios.create({
   baseURL: '/api',
   timeout: 4000
@@ -25,6 +27,15 @@ service.interceptors.response.use(
     const { code, data } = res.data
     if (code === '200') {
       return data
+    }
+    if (code === '50003') {
+      const authStore = useAuthStore()
+      const router = useRouter()
+      const userStore = useUserStore()
+      authStore.removeToken()
+      userStore.$reset()
+      ElMessage.warning('登录过期，请重新登录')
+      router.push('/login')
     } else return Promise.reject(res.data)
   },
   (err) => {

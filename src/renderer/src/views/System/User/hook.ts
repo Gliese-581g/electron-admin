@@ -28,7 +28,6 @@ export const useOptionsStore = () => {
         userApi.getAllRole(),
         userApi.getUnitList()
       ])
-      console.log(resArr)
       options.allPost = resArr[0]
       options.allRole = resArr[1]
       options.unitList = resArr[2]
