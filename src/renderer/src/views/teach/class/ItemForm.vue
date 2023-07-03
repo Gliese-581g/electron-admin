@@ -11,7 +11,9 @@
           <el-input v-model="form.className" autocomplete="off" />
         </el-form-item>
         <el-form-item label="授课方式" prop="teachingMethod">
-          <el-input v-model="form.teachingMethod" autocomplete="off" />
+          <el-radio-group v-model="form.teachingMethod">
+            <DictRadio :dict-type="DictType.CRM_TEACHING_METHOD" />
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="选择科目" prop="subjectId">
           <el-select v-model="form.subjectId" class="m-2" placeholder="请选择科目">
@@ -36,13 +38,13 @@
           />
         </el-form-item>
         <el-form-item label="主讲老师" prop="mainTeacherId">
-          <el-input v-model="form.mainTeacherId" autocomplete="off" />
+          <CustomSelect v-model:id="form.mainTeacherId" />
         </el-form-item>
         <el-form-item label="助教老师" prop="assistTeacherId">
-          <el-input v-model="form.assistTeacherId" autocomplete="off" />
+          <CustomSelect v-model:id="form.assistTeacherId" />
         </el-form-item>
         <el-form-item label="学管老师" prop="manageTeacherId">
-          <el-input v-model="form.manageTeacherId" autocomplete="off" />
+          <CustomSelect v-model:id="form.manageTeacherId" />
         </el-form-item>
         <el-form-item label="授课课时" prop="manageTeacherId">
           <el-checkbox-group v-model="teachingDay">
@@ -79,6 +81,8 @@
 import { computed, onBeforeMount, reactive, ref } from 'vue'
 import * as pageApi from '@api/teach/class'
 import useItemForm from '@renderer/hooks/useItemForm'
+import { DictType } from '@config/index'
+import CustomSelect from './CustomSelect.vue'
 // import { dateToStr, strToDate } from '@utils/index'
 
 const props = defineProps<{

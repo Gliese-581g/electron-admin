@@ -92,3 +92,10 @@ export function getAllSubject() {
     method: 'get'
   })
 }
+// 获取机构树
+export function getUnitTree() {
+  return request({
+    url: '/system/unit/tree',
+    method: 'get'
+  })
+}

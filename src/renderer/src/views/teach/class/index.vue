@@ -28,8 +28,16 @@
         min-width="120"
         align="center"
       />
-      <el-table-column prop="status" label="班级状态" min-width="120" align="center" />
-      <el-table-column prop="teachingMethod" label="授课方式" min-width="120" align="center" />
+      <el-table-column prop="status" label="班级状态" min-width="120" align="center">
+        <template #default="{ row }">
+          <DictTag :dict-type="DictType.CRM_CLASS_STATUS" :value="row.status" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="teachingMethod" label="授课方式" min-width="120" align="center">
+        <template #default="{ row }">
+          <DictTag :dict-type="DictType.CRM_TEACHING_METHOD" :value="row.teachingMethod" />
+        </template>
+      </el-table-column>
       <el-table-column
         prop="teachingDay"
         :formatter="formatter"
@@ -88,6 +96,7 @@ import { Delete, Edit, Plus, Printer } from '@element-plus/icons-vue'
 import { convertToChineseWeekday } from '@utils/index'
 import usePage from '@renderer/hooks/usePage'
 import ItemForm from './ItemForm.vue'
+import { DictType } from '@config/index'
 
 const pageName = '班级'
 const { pageData, pagination, getPage, total, dialogVisible, itemId, handleDelete, editForm } =
