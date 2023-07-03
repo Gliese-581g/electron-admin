@@ -30,7 +30,7 @@
         </el-form-item>
         <el-form-item label="开班时间" prop="beginDate">
           <el-date-picker
-            v-model="form.beginDate"
+            v-model="dateRangeValue"
             type="daterange"
             range-separator="至"
             start-placeholder="开班日期"
@@ -58,13 +58,23 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="选择时间段" prop="beginDate">
-          <el-date-picker
-            v-model="form.teachingTime"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="选择开始时间"
-            end-placeholder="选择结束时间"
-          />
+          <div class="time-select">
+            <el-time-select
+              v-model="startTime"
+              :max-time="endTime"
+              placeholder="开始时间"
+              end="22:00"
+              step="00:30"
+            />
+            <span class="separator">至</span>
+            <el-time-select
+              v-model="endTime"
+              :min-time="startTime"
+              placeholder="结束时间"
+              step="00:30"
+              end="24:00"
+            />
+          </div>
         </el-form-item>
       </el-form>
     </el-scrollbar>
@@ -83,7 +93,8 @@ import * as pageApi from '@api/teach/class'
 import useItemForm from '@renderer/hooks/useItemForm'
 import { DictType } from '@config/index'
 import CustomSelect from './CustomSelect.vue'
-// import { dateToStr, strToDate } from '@utils/index'
+import { dateToStr, strToDate } from '@utils/index'
+import { DateModelType } from 'element-plus'
 
 const props = defineProps<{
   pageName: string
@@ -94,7 +105,7 @@ const emit = defineEmits(['update:dialogVisible', 'getPage'])
 const form = reactive<pageApi.addItemParam>({
   id: '',
   className: '',
-  teachingMethod: '',
+  teachingMethod: '0',
   subjectId: '',
   fullPeople: 0,
   mainTeacherId: '',
@@ -107,17 +118,23 @@ const form = reactive<pageApi.addItemParam>({
   teachingTime: '',
   status: 0
 })
-// const dateRange = computed({
-//   get() {
-//     const beginDate = strToDate(form.beginDate)
-//     const endDate = strToDate(form.endDate)
-//     return [beginDate, endDate]
-//   },
-//   set(newArr) {
-//     form.beginDate = dateToStr(newArr[0])
-//     form.endDate = dateToStr(newArr[1])
-//   }
-// })
+const dateRangeValue = computed<[DateModelType, DateModelType]>({
+  get() {
+    const beginDate = strToDate(form.beginDate)
+    const endDate = strToDate(form.endDate)
+    return [beginDate, endDate]
+  },
+  set(newArr) {
+    form.beginDate = dateToStr(newArr[0] as Date)
+    if (newArr[1]) form.endDate = dateToStr(newArr[1] as Date)
+  }
+})
+
+const startTime = ref('')
+const endTime = ref('')
+const formatTeachingTime = () => {
+  return startTime.value + '-' + endTime.value
+}
 const teachingDay = computed({
   get() {
     const result = form.teachingDay ? form.teachingDay.split(',') : []
@@ -128,12 +145,12 @@ const teachingDay = computed({
     console.log(form.teachingDay)
   }
 })
-// const teachingDay = ref([])
 const { ruleFormRef, dialogFormVisible, validateForm, title } = useItemForm(props, emit, pageApi)
 
 const rules = reactive({})
 
 const onSubmit = () => {
+  form.teachingTime = formatTeachingTime()
   validateForm(form)
 }
 const allSubject = ref<any[]>([])
@@ -158,5 +175,11 @@ const handleClose = () => {
 <style lang="scss" scoped>
 .itemForm {
   padding-right: 30px;
+  .time-select {
+    display: flex;
+    .separator {
+      padding: 0 10px;
+    }
+  }
 }
 </style>

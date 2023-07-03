@@ -54,6 +54,7 @@ declare module 'vue' {
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
+    ElTimeSelect: typeof import('element-plus/es')['ElTimeSelect']
     ElTree: typeof import('element-plus/es')['ElTree']
     IconParkoClose: typeof import('~icons/icon-park-outline/close')['default']
     IconParkoFullScreen: typeof import('~icons/icon-park-outline/full-screen')['default']
