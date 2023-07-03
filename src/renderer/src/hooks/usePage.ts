@@ -1,6 +1,6 @@
 import { onBeforeMount, reactive, ref } from 'vue'
 
-export default function usePage<T>(pageApi: any, pageName: string) {
+export default function usePage<T = any>(pageApi: any, pageName: string) {
   const pageData = ref<T[]>([])
   const pagination = reactive({
     current: 1,
@@ -8,7 +8,7 @@ export default function usePage<T>(pageApi: any, pageName: string) {
   })
   const total = ref(0)
   const getPage = async (searchParams = {}) => {
-    const pageParams = Object.assign(pagination, searchParams)
+    const pageParams = Object.assign({}, pagination, searchParams)
     const data = await pageApi.getPage(pageParams)
     pageData.value = data.records
     total.value = data.total
