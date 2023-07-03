@@ -1,6 +1,6 @@
 import { reactive, ref } from 'vue'
 import { getUnitTree } from '@api/teach/class'
-import { getUserPage } from '@api/system/user'
+import { getPage } from '@api/system/user'
 
 export default function useSelectData() {
   const treeData = ref()
@@ -19,7 +19,7 @@ export default function useSelectData() {
   })
 
   const setTableData = async () => {
-    const data = await getUserPage(userParams)
+    const data = await getPage(userParams)
     tableData.value = data.records
   }
   return { treeData, setTreeData, tableData, setTableData, userParams }

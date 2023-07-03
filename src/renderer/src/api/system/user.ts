@@ -33,7 +33,7 @@ export interface Record {
   rolePerm: string
   unitId: string
   dataPrivileges: number
-  enabled: number
+  enabled: string
   createBy?: any
   createTime: number
   updateBy?: any
@@ -41,7 +41,7 @@ export interface Record {
   descript?: any
 }
 // 获取用户列表
-export function getUserPage(params: pageParams) {
+export function getPage(params: pageParams) {
   return request({
     url: '/system/user/page',
     method: 'get',
@@ -56,7 +56,7 @@ export function getUserDetail(id: string) {
   })
 }
 // 添加用户
-export function addUser(data: User) {
+export function addItem(data: User) {
   return request({
     url: '/system/user/add',
     method: 'post',
@@ -64,14 +64,14 @@ export function addUser(data: User) {
   })
 }
 // 删除用户
-export function deleteUser(id: string) {
+export function deleteItem(id: string) {
   return request({
     url: `/system/user/delete/${id}`,
     method: 'get'
   })
 }
 // 修改用户
-export function updateUser(data: User) {
+export function updateItem(data: User) {
   return request({
     url: '/system/user/update',
     method: 'post',
