@@ -1,5 +1,7 @@
 <template>
-  <el-radio v-for="item in dictOptions" :key="item.id" :label="item.v">{{ item.k }}</el-radio>
+  <el-radio v-for="item in dictOptions" :key="item.id" :label="parseInt(item.v)">{{
+    item.k
+  }}</el-radio>
 </template>
 
 <script setup lang="ts">
