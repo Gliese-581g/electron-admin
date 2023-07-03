@@ -31,7 +31,7 @@ export interface addRoleParams {
   permissionIds: string[] //菜单ID
 }
 
-export function getRolePage(params: roleParams) {
+export function getPage(params: roleParams) {
   return request({
     url: '/system/role/page',
     method: 'get',
@@ -47,14 +47,14 @@ export function getRoleById(id: string) {
   })
 }
 
-export function AddRole(data: addRoleParams) {
+export function AddItem(data: addRoleParams) {
   return request({
     url: '/system/role/add',
     method: 'post',
     data
   })
 }
-export function updateRole(data: addRoleParams) {
+export function updateItem(data: addRoleParams) {
   return request({
     url: '/system/role/update',
     method: 'post',
@@ -67,7 +67,7 @@ export function getMenuTree() {
     method: 'get'
   })
 }
-export function deleteRole(id: string) {
+export function deleteItem(id: string) {
   return request({
     url: `/system/role/delete/${id}`,
     method: 'get'
