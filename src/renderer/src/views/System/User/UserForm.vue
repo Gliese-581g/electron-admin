@@ -1,5 +1,11 @@
 <template>
-  <el-dialog v-model="dialogFormVisible" :title="id ? '修改用户' : '增加用户'" width="800px">
+  <el-dialog
+    v-model="dialogFormVisible"
+    :title="title"
+    width="800px"
+    @close="handleClose"
+    @open="handleOpen"
+  >
     <el-form
       ref="ruleFormRef"
       :model="form"
@@ -10,8 +16,8 @@
       <el-form-item label="角色名称" prop="username">
         <el-input v-model="form.username" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="form.password" autocomplete="off" />
+      <el-form-item label="密码" prop="password" :required="!id">
+        <el-input v-model="form.password" :disabled="Boolean(id)" autocomplete="off" />
       </el-form-item>
       <el-form-item label="真实姓名" prop="realName">
         <el-input v-model="form.realName" autocomplete="off" />
@@ -21,9 +27,7 @@
       </el-form-item>
       <el-form-item label="性别" prop="gender">
         <el-radio-group v-model="form.gender">
-          <el-radio :label="1" size="large">男</el-radio>
-          <el-radio :label="2" size="large">女</el-radio>
-          <el-radio :label="0" size="large">未知</el-radio>
+          <DictRadio :dict-type="DictType.SYSTEM_GLOBAL_GENDER" />
         </el-radio-group>
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
@@ -31,8 +35,7 @@
       </el-form-item>
       <el-form-item label="账号状态" prop="enabled">
         <el-radio-group v-model="form.enabled">
-          <el-radio :label="1" size="large">启用</el-radio>
-          <el-radio :label="0" size="large">禁用</el-radio>
+          <DictRadio :dict-type="DictType.SYSTEM_GLOBAL_STATUS" />
         </el-radio-group>
       </el-form-item>
       <el-form-item label="所属机构" prop="unitId" required>
@@ -80,26 +83,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, reactive, ref, toRef, watch } from 'vue'
+import { onBeforeMount, reactive, toRef } from 'vue'
 import * as userApi from '@api/system/user'
 import { useRulesStore } from './validate'
 import { useOptionsStore } from './hook'
+import useItemForm from '@renderer/hooks/useItemForm'
+import { DictType } from '@config/index'
 // import { IUser } from '@store/types'
 
 const props = defineProps<{
   dialogVisible: boolean
   id: string
 }>()
-const emit = defineEmits(['update:dialogVisible', 'getUserPage'])
+const emit = defineEmits(['update:dialogVisible', 'getPage'])
+const { ruleFormRef, dialogFormVisible, validateForm, title } = useItemForm(props, emit, userApi)
 
-const dialogFormVisible = computed({
-  get() {
-    return props.dialogVisible
-  },
-  set(value) {
-    emit('update:dialogVisible', value)
-  }
-})
 // const formLabelWidth = '140px'
 const form = reactive({
   id: '',
@@ -117,30 +115,8 @@ const form = reactive({
 })
 const rulesStore = useRulesStore()
 
-const ruleFormRef = ref()
 async function addUser() {
-  ruleFormRef.value.validate(async (valid) => {
-    if (valid) {
-      try {
-        form.id ? await userApi.updateUser(form) : await userApi.addUser(form)
-        ElMessage({
-          message: form.id ? '修改成功' : '添加成功',
-          type: 'success'
-        })
-        dialogFormVisible.value = false
-        emit('getUserPage')
-      } catch (error: any) {
-        if (error?.msg) {
-          ElMessage({
-            message: form.id ? `修改失败，${error.msg} ` : `添加失败，${error.msg} `,
-            type: 'error'
-          })
-        } else {
-          console.error(error)
-        }
-      }
-    }
-  })
+  validateForm(form)
 }
 
 async function getDetail(id) {
@@ -159,17 +135,15 @@ onBeforeMount(() => {
   optionsStore.getOptions()
 })
 
-watch(
-  () => props.dialogVisible,
-  async (value) => {
-    if (value && props.id) {
-      getDetail(props.id)
-    } else if (!value) {
-      form.id = ''
-      ruleFormRef.value.resetFields()
-    }
+const handleOpen = () => {
+  if (props.id) {
+    getDetail(props.id)
   }
-)
+}
+
+const handleClose = () => {
+  ruleFormRef.value.resetFields()
+}
 </script>
 
 <style lang="scss">
