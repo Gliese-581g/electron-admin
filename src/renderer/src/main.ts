@@ -14,11 +14,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 
-import DictTag from '@components/Dict/DictTag.vue'
-import DictOptions from '@components/Dict/DictOptions.vue'
-app.component('DictTag', DictTag)
-app.component('DictOptions', DictOptions)
-
+import GlobalUI from '@components/GlobalUI'
+app.use(GlobalUI)
 app.use(router)
 app.use(pinia)
 
