@@ -32,10 +32,10 @@ export function getDictOptions(dictType: string) {
 
 // 查询字典项（批量）
 
-export function getDictOptionsBatch(params) {
+export function getDictOptionsBatch(data: string[]) {
   return request({
     url: '/system/dict/item/queryBatch',
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }

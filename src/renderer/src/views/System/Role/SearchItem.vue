@@ -8,12 +8,11 @@
     </el-form-item>
     <el-form-item label="状态" prop="enabled">
       <el-select v-model="searchForm.enabled" placeholder="请选择启动状态">
-        <el-option label="启用" :value="1" />
-        <el-option label="停用" :value="0" />
+        <DictOptions :dict-type="DictType.SYSTEM_GLOBAL_STATUS" />
       </el-select>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="emit('getList', searchForm)"> 搜索 </el-button>
+      <el-button type="primary" @click="emit('getPage', searchForm)"> 搜索 </el-button>
       <el-button @click="resetForm(searchFormRef)">重置</el-button>
     </el-form-item>
   </el-form>
@@ -21,7 +20,9 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-const emit = defineEmits(['getList'])
+import { DictType } from '@config/index'
+
+const emit = defineEmits(['getPage'])
 const searchFormRef = ref()
 const searchForm = reactive<{
   roleName: string
@@ -36,10 +37,9 @@ const searchForm = reactive<{
 function resetForm(formEl) {
   if (!formEl) return
   formEl.resetFields()
-  emit('getList')
+  console.log('hello')
+  emit('getPage')
 }
 </script>
 
 <style lang="scss" scoped></style>
-
-// 本地筛选

@@ -17,7 +17,7 @@ export default function useItemForm(props, emit, pageApi) {
     ruleFormRef.value.validate(async (valid) => {
       if (valid) {
         try {
-          form.id ? await pageApi.addItem(form) : await pageApi.updateItem(form)
+          form.id ? await pageApi.updateItem(form) : await pageApi.addItem(form)
           ElMessage({
             message: form.id ? '修改成功' : '添加成功',
             type: 'success'

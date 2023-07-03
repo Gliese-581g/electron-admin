@@ -8,7 +8,7 @@ export const useRulesStore = () => {
       { max: 10, message: '长度最长10位', trigger: 'change' }
     ],
     password: [
-      { required: true, message: '请输入', trigger: 'change' },
+      { message: '请输入', trigger: 'change' },
       { min: 3, max: 15, message: '长度3-15位', trigger: 'blur' }
     ],
     realName: [
